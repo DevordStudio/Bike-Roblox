@@ -43,13 +43,13 @@ public class pedalControls : MonoBehaviour
 
     void Update()
     {
-     //Pressing "Space" starts bunnyhop stunt
-        if (Input.GetKeyDown("space"))
+        //Pressing "Space" starts bunnyhop stunt
+        if (Input.GetKeyDown("space") && linkToBike.IsGrounded)
         {
             StartCoroutine(StuntBunnyHope());
         }
 
-        if (Input.GetKeyDown(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.N)&&!linkToBike.IsGrounded)
         {
             StartCoroutine(StuntBackFlip360());
         }
@@ -142,7 +142,7 @@ public class pedalControls : MonoBehaviour
     //void StuntBunnyHope (){
     IEnumerator StuntBunnyHope()
     {
-        linkToRider.PlayA("bannyhope");//animation is optional. You may delete this string with no bad aftermath
+        //linkToRider.PlayA("bannyhope");//animation is optional. You may delete this string with no bad aftermath
         stuntBike.GetComponent<Rigidbody>().AddForce(Vector3.up * 40000);//push bike up
         yield return new WaitForSeconds(0.1f);//a little pause between applying force
         stuntBike.GetComponent<Rigidbody>().AddTorque(transform.right * -14000);//pull front wheel(turn bike around CoM)

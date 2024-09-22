@@ -67,7 +67,7 @@ public class bicycle_code : MonoBehaviour
     public float frontBrakePower; //brake power absract - 100 is good brakes																		
 
     public float LegsPower; // Leg's power to wheels. Abstract it's not HP or KW or so...																	
-    
+
     // airRes is for wind resistance to large bikes more than small ones
     public float airRes; //Air resistant 																										// 1 is neutral
 
@@ -78,6 +78,16 @@ public class bicycle_code : MonoBehaviour
     private GameObject pedals;
     private pedalControls linkToStunt;
     private bool rearPend;
+
+    [Header("Проверка на землю")]
+    [SerializeField] private float rayLength = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
+    [HideInInspector] public bool IsGrounded;
+
+    [Header("Таймер для рестарта")]
+    [SerializeField] private float _restartCoolDown = 3;
+    private float _timer;
+    private bool IsCanRestart;
 
     [HideInInspector]
     public float bikeSpeed; //to know bike speed km/h
@@ -185,6 +195,13 @@ public class bicycle_code : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (Physics.Raycast(transform.position, Vector3.down, rayLength, groundLayer))
+        {
+            IsGrounded = true;
+            Debug.Log("Объект на земле");
+        }
+        else
+            IsGrounded = false;
 
         ApplyLocalPositionToVisuals(coll_frontWheel);
         ApplyLocalPositionToVisuals(coll_rearWheel);
@@ -300,7 +317,7 @@ public class bicycle_code : MonoBehaviour
 
             CoM.localPosition = new Vector3(CoM.localPosition.x, -(0.995f - baseDistance / 2.8f) - stoppieEmpower, CoM.localPosition.z);
 
-            
+
             GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
 
             //this is attenuation for rear suspension targetPosition
@@ -372,7 +389,7 @@ public class bicycle_code : MonoBehaviour
             springWeakness = (int)(normalFrontSuspSpring - (normalFrontSuspSpring * 1.5f) * maxFrontSuspConstrain);
 
 
-            
+
             GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
             // debug - wheel is red when braking
             meshFrontWheel.GetComponent<Renderer>().material.color = Color.red;
@@ -399,7 +416,8 @@ public class bicycle_code : MonoBehaviour
             coll_frontWheel.forceAppPointDistance = 0.25f;//for better sliding when rear brake is on
 
             stiffPowerGain = stiffPowerGain += 0.025f - (bikeSpeed / 10000);
-            if (stiffPowerGain > 0.9f - bikeSpeed / 300) { 
+            if (stiffPowerGain > 0.9f - bikeSpeed / 300)
+            {
                 stiffPowerGain = 0.9f - bikeSpeed / 300;
             }
 
@@ -546,8 +564,9 @@ public class bicycle_code : MonoBehaviour
 
         /////////////////////////////////////////////////////// RESTART KEY ///////////////////////////////////////////////////////////
         // Restart key - recreate bike few meters above current place
-        if (outsideControls.restartBike)
+        if (outsideControls.restartBike && IsCanRestart)
         {
+            IsCanRestart = false;
             if (outsideControls.fullRestartBike)
             {
                 transform.position = new Vector3(0, 1, -11);
@@ -591,9 +610,15 @@ public class bicycle_code : MonoBehaviour
         if (crashed) coll_rearWheel.motorTorque = 0;//to prevent some bug when bike crashed but still accelerating
     }
 
-    //void Update (){
-    //not use that because everything here is about physics
-    //}
+    private void Update()
+    {
+        if (_timer >= _restartCoolDown)
+        {
+            _timer = 0;
+            IsCanRestart = true;
+        }
+        else _timer += Time.deltaTime;
+    }
     ///////////////////////////////////////////// FUNCTIONS /////////////////////////////////////////////////////////
     void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
@@ -653,7 +678,7 @@ public class bicycle_code : MonoBehaviour
     {
         var tmpRearSusp = coll_rearWheel.suspensionSpring;
         tmpRearSusp.spring = normalRearSuspSpring;
-        coll_rearWheel.suspensionSpring = tmpRearSusp;   
+        coll_rearWheel.suspensionSpring = tmpRearSusp;
     }
     //need to restore spring power for front suspension after make it weaker for stoppie
     void FrontSuspensionRestoration(int sprWeakness)
