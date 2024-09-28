@@ -17,7 +17,7 @@ public class CharacterShop : MonoBehaviour
     [SerializeField] private GameObject _buttonEquip;
     [SerializeField] private GameObject _buttonEquiped;
 
-    private int _currentIndex = 0;
+    private int _currentIndex;
     private List<GameObject> _models;
 
     private void Start()
@@ -27,30 +27,40 @@ public class CharacterShop : MonoBehaviour
     }
     public void GenerateModels()
     {
-        foreach(var character in CharacterController.Instance.Characters)
+        foreach (var character in CharacterController.Instance.Characters)
         {
             var model = Instantiate(character.CharacterModel, _spawnPoint.transform);
             model.name = character.Id.ToString();
             _models.Add(model);
         }
     }
+    public void OpenShop()
+    {
+        _mainCamera.gameObject.SetActive(false);
+        _shopCamera.gameObject.SetActive(true);
+    }
+    public void CloseShop()
+    {
+        _shopCamera.gameObject.SetActive(false);
+        _mainCamera.gameObject.SetActive(true);
+    }
     public void Next()
     {
         if (_currentIndex != CharacterController.Instance.Characters.Length - 1)
         {
             _currentIndex++;
-            UpdateVisual();
         }
         else _currentIndex = 0;
+        UpdateVisual();
     }
     public void Previous()
     {
         if (_currentIndex != 0)
         {
             _currentIndex--;
-            UpdateVisual();
         }
         else _currentIndex = CharacterController.Instance.Characters.Length - 1;
+        UpdateVisual();
     }
     public void UpdateVisual()
     {
@@ -88,13 +98,17 @@ public class CharacterShop : MonoBehaviour
             UpdateVisual();
         }
         else
-            throw new Exception("Location is already bought");
+            throw new Exception("Character is already bought");
     }
     public void Equip()
     {
         CharacterData character = CharacterController.Instance.Characters[_currentIndex];
-        if(character.IsBought && !character.IsEquiped)
+        if (character.IsBought && !character.IsEquiped)
         {
+            foreach (var items in CharacterController.Instance.Characters)
+            {
+                items.IsEquiped = false;
+            }
             character.Use();
             UpdateVisual();
         }

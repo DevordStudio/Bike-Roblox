@@ -30,9 +30,17 @@ public class CharacterController : MonoBehaviour
         else
             Destroy(gameObject);
     }
+    private void Start()
+    {
+        ActivateCurrentCharacter();
+    }
     public void ChangeCharacter(int Id)
     {
         ActiveCharacterId = Id;
+        ActivateCurrentCharacter();
+    }
+    private void ActivateCurrentCharacter()
+    {
         foreach (var character in _characters)
         {
             character.gameObject.SetActive(character.Id == ActiveCharacterId);

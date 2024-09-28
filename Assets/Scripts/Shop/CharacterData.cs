@@ -13,6 +13,7 @@ public class CharacterData : ShopItemData
         if (IsBought && Character && !IsEquiped)
         {
             CharacterController.Instance.ChangeCharacter(Id);
+            IsEquiped = true;
             Debug.Log($"Установлен скин под названием {Name}");
         }
         else Debug.LogError("Персонаж не куплен");

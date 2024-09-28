@@ -19,6 +19,7 @@ public class BankVolute : ScriptableObject
                 _money = value;
                 OnMoneyValueChanged?.Invoke(_money);
             }
+            else throw new Exception("Ошибка! Число денег не может быть отрицательным");
         }
     }
 

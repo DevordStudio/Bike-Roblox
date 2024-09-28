@@ -37,6 +37,8 @@ public class TrailController : MonoBehaviour
         _trails = null;
         _trails = Resources.LoadAll<TrailData>("ShopItems/TrailDatas");
         GenerateCells();
+        _trailRenderer.material = currentCell.TrailData.Material;
+        UpdateUI();
     }
     public void UpdateUI()
     {
@@ -91,6 +93,7 @@ public class TrailController : MonoBehaviour
         {
             lastCell.TrailData.IsEquiped = false;
             currentCell.TrailData.IsEquiped = true;
+            lastCell = currentCell;
             _trailRenderer.material = currentCell.TrailData.Material;
         }
         UpdateUI();
@@ -119,5 +122,6 @@ public class TrailController : MonoBehaviour
         cell.TrailData = data;
         cell.Icon.color = data.Material.color;
         cell.IconEquiped.gameObject.SetActive(data.IsEquiped);
+        if(data.IsEquiped) currentCell = cell;
     }
 }

@@ -44,32 +44,32 @@ public class pedalControls : MonoBehaviour
     void Update()
     {
         //Pressing "Space" starts bunnyhop stunt
-        if (Input.GetKeyDown("space") && linkToBike.IsGrounded)
+        if (Input.GetKeyDown("space") && linkToBike.IsGrounded && !linkToBike.crashed)
         {
             StartCoroutine(StuntBunnyHope());
         }
 
-        if (Input.GetKeyDown(KeyCode.N)&&!linkToBike.IsGrounded)
+        if (Input.GetKeyDown(KeyCode.N)&&!linkToBike.IsGrounded && !linkToBike.crashed)
         {
             StartCoroutine(StuntBackFlip360());
         }
 
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M) && !linkToBike.crashed)
         {
             StartCoroutine(StuntTurnLeft180());
         }
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B) && !linkToBike.crashed)
         {
             StartCoroutine(StuntBunnyShiftRight());
         }
 
-        if (Input.GetKeyDown(KeyCode.Slash))
+        if (Input.GetKeyDown(KeyCode.Slash) && !linkToBike.crashed)
         {
             StartCoroutine(StuntHoldForOneSecond());
         }
         //"2" for manual
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !linkToBike.crashed)
         {
             StuntManual();
         }

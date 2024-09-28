@@ -201,10 +201,10 @@ public class biker_logic_mecanim : MonoBehaviour
         //in case of crashed call ragdoll
         if (bikeRideOn.transform.name == "rigid_bike")
         {
-            if (bikeStatusCrashed.crashed && !ragdollLaunched)
-            {
-                createRagDoll();
-            }
+            //if (bikeStatusCrashed.crashed && !ragdollLaunched)
+            //{
+            //    createRagDoll();
+            //}
         }
 
         //scan do rider see POI
