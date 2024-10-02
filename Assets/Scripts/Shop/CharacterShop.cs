@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,14 +10,14 @@ public class CharacterShop : MonoBehaviour
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private Camera _shopCamera;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private Button _nextButton;
-    [SerializeField] private Button _previousButton;
     [SerializeField] private GameObject _buttonBuy;
     [SerializeField] private GameObject _buttonEquip;
     [SerializeField] private GameObject _buttonEquiped;
+    [SerializeField] private CharacterController _characterController;
+    [SerializeField] private BankVolute _bank;
+    [SerializeField] private List<GameObject> _models = new List<GameObject>();
 
     private int _currentIndex;
-    private List<GameObject> _models;
 
     private void Start()
     {
@@ -27,10 +26,10 @@ public class CharacterShop : MonoBehaviour
     }
     public void GenerateModels()
     {
-        foreach (var character in CharacterController.Instance.Characters)
+        foreach (var character in _characterController.Characters)
         {
             var model = Instantiate(character.CharacterModel, _spawnPoint.transform);
-            model.name = character.Id.ToString();
+            model.name = character.Info.Id.ToString();
             _models.Add(model);
         }
     }
@@ -46,7 +45,7 @@ public class CharacterShop : MonoBehaviour
     }
     public void Next()
     {
-        if (_currentIndex != CharacterController.Instance.Characters.Length - 1)
+        if (_currentIndex != _characterController.Characters.Length - 1)
         {
             _currentIndex++;
         }
@@ -59,30 +58,30 @@ public class CharacterShop : MonoBehaviour
         {
             _currentIndex--;
         }
-        else _currentIndex = CharacterController.Instance.Characters.Length - 1;
+        else _currentIndex = _characterController.Characters.Length - 1;
         UpdateVisual();
     }
     public void UpdateVisual()
     {
-        CharacterData character = CharacterController.Instance.Characters[_currentIndex];
+        CharacterData character = _characterController.Characters[_currentIndex];
         foreach (var model in _models)
         {
-            model.SetActive(character.Id.ToString() == model.name);
+            model.SetActive(character.Info.Id.ToString() == model.name);
         }
-        _nameText.text = character.Name;
-        if (!character.IsBought) //Если персонаж не куплен
+        _nameText.text = character.Info.Name;
+        if (!character.Info.IsBought) //Если персонаж не куплен
         {
             _buttonBuy.SetActive(true);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
         }
-        else if (character.IsBought && CharacterController.Instance.ActiveCharacterId != character.Id)//Если куплен и не выбран
+        else if (character.Info.IsBought && !character.Info.IsEquiped)//Если куплен и не выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(true);
             _buttonEquiped.SetActive(false);
         }
-        else if (character.IsBought && CharacterController.Instance.ActiveCharacterId != character.Id)// Если выбран
+        else if (character.Info.IsBought && character.Info.IsEquiped)// Если выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(false);
@@ -91,10 +90,11 @@ public class CharacterShop : MonoBehaviour
     }
     public void Buy()
     {
-        CharacterData character = CharacterController.Instance.Characters[_currentIndex];
-        if (!character.IsBought)
+        CharacterData character = _characterController.Characters[_currentIndex];
+        if (!character.Info.IsBought && _bank.Money >= character.Info.Price)
         {
-            character.Buy();
+            _bank.DecreaseMoney(character.Info.Price);
+            character.Info.Buy();
             UpdateVisual();
         }
         else
@@ -102,14 +102,14 @@ public class CharacterShop : MonoBehaviour
     }
     public void Equip()
     {
-        CharacterData character = CharacterController.Instance.Characters[_currentIndex];
-        if (character.IsBought && !character.IsEquiped)
+        CharacterData character = _characterController.Characters[_currentIndex];
+        if (character.Info.IsBought && !character.Info.IsEquiped)
         {
-            foreach (var items in CharacterController.Instance.Characters)
+            foreach (var items in _characterController.Characters)
             {
-                items.IsEquiped = false;
+                items.Info.IsEquiped = false;
             }
-            character.Use();
+            character.Info.Use();
             UpdateVisual();
         }
     }

@@ -16,22 +16,11 @@ public class TrailController : MonoBehaviour
     [SerializeField] private TMP_Text _stats;
     [SerializeField] private TMP_Text _notice;
     [SerializeField] private TrailRenderer _trailRenderer;
+    [SerializeField] private BankVolute _bank;
 
     [HideInInspector] public TrailCell currentCell;
     [HideInInspector] public TrailCell lastCell;
 
-    [HideInInspector] public static TrailController Instance;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-            Destroy(gameObject);
-    }
     private void Start()
     {
         _trails = null;
@@ -72,15 +61,15 @@ public class TrailController : MonoBehaviour
     {
         if (currentCell && !currentCell.TrailData.IsBought)
         {
-            if (BankVolute.Instance.Money >= currentCell.TrailData.Price)
+            if (_bank.Money >= currentCell.TrailData.Price)
             {
                 currentCell.TrailData.IsBought = true;
-                BankVolute.Instance.Money -= currentCell.TrailData.Price;
+                _bank.DecreaseMoney(currentCell.TrailData.Price);
                 Debug.Log($"Трейл {currentCell.TrailData.Name} был куплен за {currentCell.TrailData.Price}");
             }
             else
             {
-                _notice.text = $"Недосточно монет! Вам нужно ещё {BankVolute.Instance.Money - currentCell.TrailData.Price} монет чтобы купить этот предмет.";
+                _notice.text = $"Недосточно монет! Вам нужно ещё {_bank.Money - currentCell.TrailData.Price} монет чтобы купить этот предмет.";
                 _notice.gameObject.SetActive(true);
                 TextFade(_notice);
             }
@@ -122,6 +111,7 @@ public class TrailController : MonoBehaviour
         cell.TrailData = data;
         cell.Icon.color = data.Material.color;
         cell.IconEquiped.gameObject.SetActive(data.IsEquiped);
+        cell.TrailController = this;
         if(data.IsEquiped) currentCell = cell;
     }
 }

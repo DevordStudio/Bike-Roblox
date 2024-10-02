@@ -23,17 +23,7 @@ public class BikeController : MonoBehaviour
     [SerializeField] private GameObject _bikeModel;
 
     public int ActiveBikeId { get; private set; }
-    public static BikeController Instance;
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-            Destroy(gameObject);
-    }
+
     private void Start()
     {
         ActivateCurrentBike();

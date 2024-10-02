@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +14,8 @@ public class BikeShop : MonoBehaviour
     [SerializeField] private GameObject _buttonEquip;
     [SerializeField] private GameObject _buttonEquiped;
     [SerializeField] private TMP_Text _bikeName;
+    [SerializeField] private BikeController _bikeController;
+    [SerializeField] private BankVolute _bank;
 
     private Camera _mainCamera;
     private int _currentIndex;
@@ -35,12 +36,12 @@ public class BikeShop : MonoBehaviour
     }
     public void Next()
     {
-        if (_currentIndex != BikeController.Instance.Bikes.Length - 1)
+        if (_currentIndex != _bikeController.Bikes.Length - 1)
         {
             _currentIndex++;
         }
         else _currentIndex = 0;
-        //UpdateVisual
+        UpdateVisual();
     }
     public void Previous()
     {
@@ -48,12 +49,12 @@ public class BikeShop : MonoBehaviour
         {
             _currentIndex--;
         }
-        else _currentIndex = BikeController.Instance.Bikes.Length - 1;
-        //UpdateVisual
+        else _currentIndex = _bikeController.Bikes.Length - 1;
+        UpdateVisual();
     }
     public void UpdateVisual()
     {
-        BikeData currentBike = BikeController.Instance.Bikes[_currentIndex];
+        BikeData currentBike = _bikeController.Bikes[_currentIndex];
         currentBike.ChangeMaterials(_chasicsMR, _frontWheelMR, _backWheelMR);
         _bikeName.text = currentBike.Name;
         if (!currentBike.IsBought)//Если велосипед не куплен
@@ -77,26 +78,26 @@ public class BikeShop : MonoBehaviour
     }
     public void Buy()
     {
-        BikeData currentBike = BikeController.Instance.Bikes[_currentIndex];
-        if (!currentBike.IsBought)
+        BikeData currentBike = _bikeController.Bikes[_currentIndex];
+        if (_bank.Money >= currentBike.Price)
         {
+            _bank.DecreaseMoney(currentBike.Price);
             currentBike.Buy();
             UpdateVisual();
         }
-        else
-            throw new Exception("Bike is already bought");
+        else Debug.Log($"Недостаточно денег для покупки велосипеда {currentBike.Name}");//Прикрутить предупреждение для игрока
     }
     public void Equip()
     {
-        BikeData currentBike = BikeController.Instance.Bikes[_currentIndex];
+        BikeData currentBike = _bikeController.Bikes[_currentIndex];
         if (currentBike.IsBought && !currentBike.IsEquiped)
         {
-            foreach (var items in BikeController.Instance.Bikes)
+            foreach (var items in _bikeController.Bikes)
             {
                 items.IsEquiped = false;
             }
             currentBike.IsEquiped = true;
-            BikeController.Instance.ChangeBike(currentBike.Id);
+            _bikeController.ChangeBike(currentBike.Id);
         }
     }
 }

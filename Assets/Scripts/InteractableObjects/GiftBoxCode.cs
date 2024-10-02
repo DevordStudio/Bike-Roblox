@@ -8,19 +8,20 @@ public class GiftBoxCode : MonoBehaviour
 
     private bool _claimed;
 
-    public BoxPointCode OwnPoint;
+    [HideInInspector] public BoxPointCode OwnPoint;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out bicycle_code player) && !_claimed)
         {
             _claimed = true;
-            BankVolute.Instance.Money += _reward;
+            OwnPoint.Bank.IncreaseMoney(_reward);
             Debug.Log($"Коробка открыта. Игрок получил {_reward} денег");
             OwnPoint.InvokeSpawn();
             PlayAnim();
         }
     }
+    public void DestroyObject() => Destroy(gameObject);
     private void PlayAnim()
     {
         _animator.Play("OpenBox");
