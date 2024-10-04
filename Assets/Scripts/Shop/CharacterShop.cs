@@ -109,7 +109,7 @@ public class CharacterShop : MonoBehaviour
             {
                 items.Info.IsEquiped = false;
             }
-            character.Info.Use();
+            character.Info.Equip();
             UpdateVisual();
         }
     }

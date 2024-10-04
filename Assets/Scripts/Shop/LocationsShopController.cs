@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class LocationsShopController : MonoBehaviour
 {
@@ -73,17 +74,22 @@ public class LocationsShopController : MonoBehaviour
     public void Buy()
     {
         LocationData loc = _locationController.Locations[_currentIndex];
-        if (!loc.LocationInfo.IsBought && _bank.Money >= loc.LocationInfo.Price)
+        if (!loc.LocationInfo.IsBought && _bank.Money >= loc.LocationInfo.Price && !loc.IsDonate)
         {
             _bank.DecreaseMoney(loc.LocationInfo.Price);
             loc.LocationInfo.Buy();
             UpdateUI();
+        }
+        else if (loc.IsDonate)
+        {
+            PurchaseYG purchasing = loc.Location.GetComponent<PurchaseYG>();
+            purchasing.BuyPurchase();
         }
     }
     public void Play()
     {
         LocationData loc = _locationController.Locations[_currentIndex];
         if (!loc.LocationInfo.IsEquiped)
-            loc.LocationInfo.Use();
+            loc.LocationInfo.Equip();
     }
 }
