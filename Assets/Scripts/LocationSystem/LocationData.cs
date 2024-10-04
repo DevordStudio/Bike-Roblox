@@ -4,5 +4,4 @@ public class LocationData : MonoBehaviour
 {
     public GameObject Location;
     public LocationInfo LocationInfo;
-    public bool IsDonate;
 }

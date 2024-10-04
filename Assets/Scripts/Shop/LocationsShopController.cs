@@ -74,16 +74,15 @@ public class LocationsShopController : MonoBehaviour
     public void Buy()
     {
         LocationData loc = _locationController.Locations[_currentIndex];
-        if (!loc.LocationInfo.IsBought && _bank.Money >= loc.LocationInfo.Price && !loc.IsDonate)
+        if (!loc.LocationInfo.IsBought && _bank.Money >= loc.LocationInfo.Price && !loc.LocationInfo.IsDonate)
         {
             _bank.DecreaseMoney(loc.LocationInfo.Price);
             loc.LocationInfo.Buy();
             UpdateUI();
         }
-        else if (loc.IsDonate)
+        else if (loc.LocationInfo.IsDonate)
         {
-            PurchaseYG purchasing = loc.Location.GetComponent<PurchaseYG>();
-            purchasing.BuyPurchase();
+            YandexGame.BuyPayments(loc.LocationInfo.Id.ToString());
         }
     }
     public void Play()

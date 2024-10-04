@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class CharacterShop : MonoBehaviour
 {
@@ -91,14 +92,16 @@ public class CharacterShop : MonoBehaviour
     public void Buy()
     {
         CharacterData character = _characterController.Characters[_currentIndex];
-        if (!character.Info.IsBought && _bank.Money >= character.Info.Price)
+        if (!character.Info.IsBought && _bank.Money >= character.Info.Price && !character.Info.IsDonate)
         {
             _bank.DecreaseMoney(character.Info.Price);
             character.Info.Buy();
             UpdateVisual();
         }
-        else
-            throw new Exception("Character is already bought");
+        else if (character.Info.IsDonate)
+        {
+            YandexGame.BuyPayments(character.Info.Id.ToString());
+        }
     }
     public void Equip()
     {

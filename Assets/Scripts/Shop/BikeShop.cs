@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class BikeShop : MonoBehaviour
 {
@@ -79,11 +80,15 @@ public class BikeShop : MonoBehaviour
     public void Buy()
     {
         BikeData currentBike = _bikeController.Bikes[_currentIndex];
-        if (_bank.Money >= currentBike.Price)
+        if (_bank.Money >= currentBike.Price && !currentBike.IsDonate)
         {
             _bank.DecreaseMoney(currentBike.Price);
             currentBike.Buy();
             UpdateVisual();
+        }
+        else if (currentBike.IsDonate)
+        {
+            YandexGame.BuyPayments(currentBike.Id.ToString());
         }
         else Debug.Log($"Недостаточно денег для покупки велосипеда {currentBike.Name}");//Прикрутить предупреждение для игрока
     }
