@@ -1,10 +1,11 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class LocationsShopController : MonoBehaviour
 {
+    [SerializeField] private LocationController _locationController;
     [SerializeField] private Image _locationImage;
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private Button _nextButton;
@@ -12,75 +13,87 @@ public class LocationsShopController : MonoBehaviour
     [SerializeField] private GameObject _buttonBuy;
     [SerializeField] private GameObject _buttonPlay;
     [SerializeField] private GameObject _buttonThisLocation;
+    [SerializeField] private BankVolute _bank;
     private int _currentIndex = 0;
 
     private void Start()
     {
+        _locationController ??= FindAnyObjectByType<LocationController>();
+        InitButtons();
+        UpdateUI();
+    }
+    private void InitButtons()
+    {
         _nextButton.onClick.AddListener(Next);
+        _previousButton.onClick.AddListener(Previous);
         Button buttonBuy = _buttonBuy.GetComponent<Button>();
         Button buttonPlay = _buttonPlay.GetComponent<Button>();
         buttonBuy.onClick.AddListener(Buy);
-        buttonBuy.onClick.AddListener(Play);
-        UpdateUI();
+        buttonPlay.onClick.AddListener(Play);
     }
     public void Next()
     {
-        if (_currentIndex != LocationController.Instance.Locations.Length - 1)
+        if (_currentIndex != _locationController.Locations.Length - 1)
         {
             _currentIndex++;
-            UpdateUI();
         }
         else _currentIndex = 0;
+        UpdateUI();
     }
     public void Previous()
     {
         if (_currentIndex != 0)
         {
             _currentIndex--;
-            UpdateUI();
         }
-        else _currentIndex = LocationController.Instance.Locations.Length - 1;
+        else _currentIndex = _locationController.Locations.Length - 1;
+        UpdateUI();
     }
     public void UpdateUI()
     {
-        LocationData currentLocation = LocationController.Instance.Locations[_currentIndex];
-        _locationImage.sprite = currentLocation.Sprite;
-        _nameText.text = currentLocation.Sprite.name;
-        if (!currentLocation.IsBought) //Если карта не куплена
+        LocationData currentLocation = _locationController.Locations[_currentIndex];
+        if (currentLocation)
         {
-            _buttonBuy.SetActive(true);
-            _buttonPlay.SetActive(false);
-            _buttonThisLocation.SetActive(false);
+            _locationImage.sprite = currentLocation.LocationInfo.Sprite;
+            _nameText.text = currentLocation.LocationInfo.Name;
+            if (!currentLocation.LocationInfo.IsBought) //Если карта не куплена
+            {
+                _buttonBuy.SetActive(true);
+                _buttonPlay.SetActive(false);
+                _buttonThisLocation.SetActive(false);
+            }
+            else if (currentLocation.LocationInfo.IsBought && !currentLocation.LocationInfo.IsEquiped)// Если куплена и не является текущей
+            {
+                _buttonBuy.SetActive(false);
+                _buttonPlay.SetActive(true);
+                _buttonThisLocation.SetActive(false);
+            }
+            else if (currentLocation.LocationInfo.IsBought && currentLocation.LocationInfo.IsEquiped)
+            {
+                _buttonBuy.SetActive(false);
+                _buttonPlay.SetActive(false);
+                _buttonThisLocation.SetActive(true);
+            }
         }
-        else if (currentLocation.IsBought && LocationController.Instance.ActiveLocationId != currentLocation.Id)// Если куплена и не является текущей
-        {
-            _buttonBuy.SetActive(false);
-            _buttonPlay.SetActive(true);
-            _buttonThisLocation.SetActive(false);
-        }
-        else if (currentLocation.IsBought && LocationController.Instance.ActiveLocationId != currentLocation.Id)
-        {
-            _buttonBuy.SetActive(false);
-            _buttonPlay.SetActive(false);
-            _buttonThisLocation.SetActive(true);
-        }
-        else throw new Exception("Невозможно запустить локацию, так как она ещё не куплена");
     }
     public void Buy()
     {
-        LocationData loc = LocationController.Instance.Locations[_currentIndex];
-        if (!loc.IsBought)
+        LocationData loc = _locationController.Locations[_currentIndex];
+        if (!loc.LocationInfo.IsBought && _bank.GetMoney() >= loc.LocationInfo.Price && !loc.LocationInfo.IsDonate)
         {
-            loc.Buy();
+            _bank.DecreaseMoney(loc.LocationInfo.Price);
+            loc.LocationInfo.Buy();
             UpdateUI();
         }
-        else
-            throw new Exception("Location is already bought");
+        else if (loc.LocationInfo.IsDonate)
+        {
+            YandexGame.BuyPayments(loc.LocationInfo.Id.ToString());
+        }
     }
     public void Play()
     {
-        LocationData loc = LocationController.Instance.Locations[_currentIndex];
-        if (LocationController.Instance.ActiveLocationId != loc.Id)
-            loc.Use();
+        LocationData loc = _locationController.Locations[_currentIndex];
+        if (!loc.LocationInfo.IsEquiped)
+            loc.LocationInfo.Equip();
     }
 }

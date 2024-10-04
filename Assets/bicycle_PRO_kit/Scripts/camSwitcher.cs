@@ -87,7 +87,7 @@ public class camSwitcher : MonoBehaviour
 
 		} else {
 #endif
-			backCamera.enabled = true;
+			//backCamera.enabled = true;
 			aroundCamera.enabled = false;
 			backCamera.gameObject.SetActive (true);
 			aroundCamera.gameObject.SetActive (false);

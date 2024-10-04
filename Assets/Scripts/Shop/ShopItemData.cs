@@ -1,23 +1,35 @@
 using UnityEngine;
+using YG;
 
-public abstract class ShopItemData : MonoBehaviour
+public class ShopItemData : ScriptableObject
 {
-    public string Name = "Location";
+    public string Name = "Item";
     public int Price = 100;
     public int Id;
     public bool IsBought;
     public bool IsEquiped;
-    public Sprite Sprite;
-
+    public bool IsDonate;
+    private void OnEnable()
+    {
+        if (IsDonate)
+            YandexGame.PurchaseSuccessEvent += Purchase;
+    }
+    private void OnDisable()
+    {
+        if (IsDonate)
+            YandexGame.PurchaseSuccessEvent -= Purchase;
+    }
+    void Purchase(string Id)
+    {
+        if (Id == this.Id.ToString()) Buy();
+    }
     public virtual void Buy()
     {
-        if (!IsBought && BankVolute.Instance.Money >= Price)
+        if (!IsBought)
         {
-            BankVolute.Instance.Money -= Price;
             IsBought = true;
             Debug.Log($"Предмет {Name} был куплен за {Price} монет");
         }
         else Debug.LogError("Предмет уже куплен или не хватает денег!");
     }
-    public abstract void Use();
 }

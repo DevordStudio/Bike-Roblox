@@ -1,14 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "BikeData", menuName = "ShopItem/BikeData")]
 public class BikeData : ShopItemData
 {
-    public Material MainMaterial;
-    public Material SecondaryMaterial;
-
-    public override void Use()
+    public Material ChasicsMaterial;
+    public Material WheelsMaterial;
+    public void ChangeMaterials(MeshRenderer chasicsMR, MeshRenderer wheelFrontMR, MeshRenderer wheelBackMR)
     {
-        throw new System.NotImplementedException();
+        chasicsMR.materials[2] = ChasicsMaterial;
+        wheelFrontMR.materials[1] = WheelsMaterial;
+        wheelBackMR.materials[1] = WheelsMaterial;
     }
 }

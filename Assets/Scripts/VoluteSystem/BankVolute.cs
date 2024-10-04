@@ -1,33 +1,27 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BankVolute",menuName ="BankVolute",order =53)]
+[CreateAssetMenu(fileName = "BankVolute", menuName = "BankVolute", order = 53)]
 public class BankVolute : ScriptableObject
 {
     [SerializeField] private int _money;
 
-    public int Money
+    public bool Is2X;
+
+    public static event Action OnMoneyValueChanged;
+    public void IncreaseMoney(int amount)
     {
-        get
-        {
-            return _money;
-        }
-        set
-        {
-            if (value >= 0)
-            {
-                _money = value;
-                OnMoneyValueChanged?.Invoke(_money);
-            }
-        }
+        if (amount < 0) return;
+        if (Is2X)
+            _money += 2 * amount;
+        else _money += amount;
+        OnMoneyValueChanged?.Invoke();
     }
-
-    public static BankVolute Instance { get; private set; }
-
-    public static event Action<int> OnMoneyValueChanged;
-
-    private void Awake()
+    public void DecreaseMoney(int amount)
     {
-        Instance = this;
+        if(_money > amount)
+            _money -= amount;
+        OnMoneyValueChanged?.Invoke();
     }
+    public int GetMoney() => _money;
 }

@@ -1,78 +1,93 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class CharacterShop : MonoBehaviour
 {
+    [SerializeField] private CharacterController _characterController;
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private Camera _shopCamera;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private Button _nextButton;
-    [SerializeField] private Button _previousButton;
     [SerializeField] private GameObject _buttonBuy;
     [SerializeField] private GameObject _buttonEquip;
     [SerializeField] private GameObject _buttonEquiped;
+    [SerializeField] private BankVolute _bank;
 
-    private int _currentIndex = 0;
-    private List<GameObject> _models;
+    private List<GameObject> _models = new List<GameObject>();
+    private int _currentIndex;
 
     private void Start()
     {
+        _characterController ??= FindAnyObjectByType<CharacterController>();
         GenerateModels();
+        Button buy = _buttonBuy.GetComponent<Button>();
+        Button equip = _buttonEquip.GetComponent<Button>();
+        buy.onClick.AddListener(Buy);
+        equip.onClick.AddListener(Equip);
         UpdateVisual();
     }
     public void GenerateModels()
     {
-        foreach(var character in CharacterController.Instance.Characters)
+        foreach (var character in _characterController.Characters)
         {
             var model = Instantiate(character.CharacterModel, _spawnPoint.transform);
-            model.name = character.Id.ToString();
+            model.name = character.Info.Id.ToString();
             _models.Add(model);
         }
     }
+    public void OpenShop()
+    {
+        _mainCamera.gameObject.SetActive(false);
+        _shopCamera.gameObject.SetActive(true);
+    }
+    public void CloseShop()
+    {
+        _shopCamera.gameObject.SetActive(false);
+        _mainCamera.gameObject.SetActive(true);
+    }
     public void Next()
     {
-        if (_currentIndex != CharacterController.Instance.Characters.Length - 1)
+        if (_currentIndex != _characterController.Characters.Length - 1)
         {
             _currentIndex++;
-            UpdateVisual();
         }
         else _currentIndex = 0;
+        UpdateVisual();
     }
     public void Previous()
     {
         if (_currentIndex != 0)
         {
             _currentIndex--;
-            UpdateVisual();
         }
-        else _currentIndex = CharacterController.Instance.Characters.Length - 1;
+        else _currentIndex = _characterController.Characters.Length - 1;
+        UpdateVisual();
     }
     public void UpdateVisual()
     {
-        CharacterData character = CharacterController.Instance.Characters[_currentIndex];
+        CharacterData character = _characterController.Characters[_currentIndex];
         foreach (var model in _models)
         {
-            model.SetActive(character.Id.ToString() == model.name);
+            model.SetActive(character.Info.Id.ToString() == model.name);
         }
-        _nameText.text = character.Name;
-        if (!character.IsBought) //Если персонаж не куплен
+        _nameText.text = character.Info.Name;
+        if (!character.Info.IsBought) //Если персонаж не куплен
         {
             _buttonBuy.SetActive(true);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
         }
-        else if (character.IsBought && CharacterController.Instance.ActiveCharacterId != character.Id)//Если куплен и не выбран
+        else if (character.Info.IsBought && !character.Info.IsEquiped)//Если куплен и не выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(true);
             _buttonEquiped.SetActive(false);
         }
-        else if (character.IsBought && CharacterController.Instance.ActiveCharacterId != character.Id)// Если выбран
+        else if (character.Info.IsBought && character.Info.IsEquiped)// Если выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(false);
@@ -81,21 +96,28 @@ public class CharacterShop : MonoBehaviour
     }
     public void Buy()
     {
-        CharacterData character = CharacterController.Instance.Characters[_currentIndex];
-        if (!character.IsBought)
+        CharacterData character = _characterController.Characters[_currentIndex];
+        if (!character.Info.IsBought && _bank.GetMoney() >= character.Info.Price && !character.Info.IsDonate)
         {
-            character.Buy();
+            _bank.DecreaseMoney(character.Info.Price);
+            character.Info.Buy();
             UpdateVisual();
         }
-        else
-            throw new Exception("Location is already bought");
+        else if (character.Info.IsDonate)
+        {
+            YandexGame.BuyPayments(character.Info.Id.ToString());
+        }
     }
     public void Equip()
     {
-        CharacterData character = CharacterController.Instance.Characters[_currentIndex];
-        if(character.IsBought && !character.IsEquiped)
+        CharacterData character = _characterController.Characters[_currentIndex];
+        if (character.Info.IsBought && !character.Info.IsEquiped)
         {
-            character.Use();
+            foreach (var items in _characterController.Characters)
+            {
+                items.Info.IsEquiped = false;
+            }
+            character.Info.Equip();
             UpdateVisual();
         }
     }
