@@ -3,6 +3,7 @@
 /// Thank you so much !!
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class bicycle_code : MonoBehaviour
 {
@@ -89,57 +90,61 @@ public class bicycle_code : MonoBehaviour
     private float _timer;
     private bool IsCanRestart;
 
+    [Header("Для интерфейса")]
+    [Tooltip("Текст отображающий текущую скорость")]
+    [SerializeField] private TMP_Text _speedText;
+
     [HideInInspector]
     public float bikeSpeed; //to know bike speed km/h
     public bool isReverseOn = false; //to turn On and Off reverse speed
     ////////////////////////////////////////////////  ON SCREEN INFO ///////////////////////////////////////////////////////
-    void OnGUI()
-    {
-        GUIStyle biggerText = new GUIStyle("label");
-        biggerText.fontSize = 40;
-        GUIStyle middleText = new GUIStyle("label");
-        middleText.fontSize = 22;
-        GUIStyle smallerText = new GUIStyle("label");
-        smallerText.fontSize = 14;
+    //void OnGUI()
+    //{
+    //    GUIStyle biggerText = new GUIStyle("label");
+    //    biggerText.fontSize = 40;
+    //    GUIStyle middleText = new GUIStyle("label");
+    //    middleText.fontSize = 22;
+    //    GUIStyle smallerText = new GUIStyle("label");
+    //    smallerText.fontSize = 14;
 
-        //to show speed on display interface
-        GUI.color = Color.black;
-        GUI.Label(new Rect(Screen.width * 0.875f, Screen.height * 0.9f, 120, 80), string.Format("" + "{0:0.}", bikeSpeed), biggerText);
+    //    //to show speed on display interface
+    //    GUI.color = Color.black;
+    //    GUI.Label(new Rect(Screen.width * 0.875f, Screen.height * 0.9f, 120, 80), string.Format("" + "{0:0.}", bikeSpeed), biggerText);
 
-        if (!isReverseOn)
-        {
-            GUI.color = Color.grey;
-            GUI.Label(new Rect(Screen.width * 0.885f, Screen.height * 0.96f, 60, 40), "REAR", smallerText);
-        }
-        else
-        {
-            GUI.color = Color.red;
-            GUI.Label(new Rect(Screen.width * 0.885f, Screen.height * 0.96f, 60, 40), "REAR", smallerText);
-        }
+    //    if (!isReverseOn)
+    //    {
+    //        GUI.color = Color.grey;
+    //        GUI.Label(new Rect(Screen.width * 0.885f, Screen.height * 0.96f, 60, 40), "REAR", smallerText);
+    //    }
+    //    else
+    //    {
+    //        GUI.color = Color.red;
+    //        GUI.Label(new Rect(Screen.width * 0.885f, Screen.height * 0.96f, 60, 40), "REAR", smallerText);
+    //    }
 
-        // user info help lines
-        GUI.color = Color.white;
-        GUI.Box(new Rect(10, 10, 180, 20), "A,W,S,D - main control", smallerText);
+    //    // user info help lines
+    //    GUI.color = Color.white;
+    //    GUI.Box(new Rect(10, 10, 180, 20), "A,W,S,D - main control", smallerText);
 
-        GUI.Box(new Rect(10, 40, 120, 20), "X - rear brake", smallerText);
-        GUI.Box(new Rect(10, 55, 320, 20), "Q,E,F,V - shift center of mass of biker", smallerText);
-        GUI.Box(new Rect(10, 70, 320, 20), "R - restart / RightShift+R - full restart", smallerText);
-        GUI.Box(new Rect(10, 85, 180, 20), "RMB - rotate camera around", smallerText);
-        GUI.Box(new Rect(10, 115, 320, 20), "C - toggle reverse", smallerText);
+    //    GUI.Box(new Rect(10, 40, 120, 20), "X - rear brake", smallerText);
+    //    GUI.Box(new Rect(10, 55, 320, 20), "Q,E,F,V - shift center of mass of biker", smallerText);
+    //    GUI.Box(new Rect(10, 70, 320, 20), "R - restart / RightShift+R - full restart", smallerText);
+    //    GUI.Box(new Rect(10, 85, 180, 20), "RMB - rotate camera around", smallerText);
+    //    GUI.Box(new Rect(10, 115, 320, 20), "C - toggle reverse", smallerText);
 
-        GUI.Box(new Rect(10, 130, 320, 20), "Space - bunnyhop", smallerText);
-        GUI.Box(new Rect(10, 145, 320, 20), "M - turn left 180", smallerText);
-        GUI.Box(new Rect(10, 160, 320, 20), "N - backflip 360", smallerText);
-        GUI.Box(new Rect(10, 175, 220, 20), "2 - manual", smallerText);
-        GUI.Box(new Rect(10, 190, 220, 20), "B - bunny jump right", smallerText);
-        GUI.Box(new Rect(10, 205, 220, 20), "/ - 1 hard clutch for half second", smallerText);
-
-
-        GUI.Box(new Rect(10, 220, 320, 20), "Esc - return to main menu", smallerText);
-        GUI.color = Color.black;
+    //    GUI.Box(new Rect(10, 130, 320, 20), "Space - bunnyhop", smallerText);
+    //    GUI.Box(new Rect(10, 145, 320, 20), "M - turn left 180", smallerText);
+    //    GUI.Box(new Rect(10, 160, 320, 20), "N - backflip 360", smallerText);
+    //    GUI.Box(new Rect(10, 175, 220, 20), "2 - manual", smallerText);
+    //    GUI.Box(new Rect(10, 190, 220, 20), "B - bunny jump right", smallerText);
+    //    GUI.Box(new Rect(10, 205, 220, 20), "/ - 1 hard clutch for half second", smallerText);
 
 
-    }
+    //    GUI.Box(new Rect(10, 220, 320, 20), "Esc - return to main menu", smallerText);
+    //    GUI.color = Color.black;
+
+
+    //}
     void Start()
     {
 
@@ -198,7 +203,7 @@ public class bicycle_code : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, rayLength, groundLayer))
         {
             IsGrounded = true;
-            Debug.Log("Объект на земле");
+            //Debug.Log("Объект на земле");
         }
         else
             IsGrounded = false;
@@ -612,12 +617,16 @@ public class bicycle_code : MonoBehaviour
 
     private void Update()
     {
+        /////////////////////////////////////TIMERS/////////////////////////////////////////////
         if (_timer >= _restartCoolDown)
         {
             _timer = 0;
             IsCanRestart = true;
         }
         else _timer += Time.deltaTime;
+
+        /////////////////////////////////////UI////////////////////////////////////////////
+        _speedText.text = ((int)bikeSpeed).ToString();
     }
     ///////////////////////////////////////////// FUNCTIONS /////////////////////////////////////////////////////////
     void ApplyLocalPositionToVisuals(WheelCollider collider)

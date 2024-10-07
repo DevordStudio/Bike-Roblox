@@ -23,6 +23,7 @@ public class BikeShop : MonoBehaviour
 
     private void Start()
     {
+        _bikeController ??=FindAnyObjectByType<BikeController>();
         UpdateVisual();
     }
     public void OpenShop()
@@ -80,7 +81,7 @@ public class BikeShop : MonoBehaviour
     public void Buy()
     {
         BikeData currentBike = _bikeController.Bikes[_currentIndex];
-        if (_bank.Money >= currentBike.Price && !currentBike.IsDonate)
+        if (_bank.GetMoney() >= currentBike.Price && !currentBike.IsDonate)
         {
             _bank.DecreaseMoney(currentBike.Price);
             currentBike.Buy();

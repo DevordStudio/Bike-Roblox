@@ -61,7 +61,7 @@ public class TrailController : MonoBehaviour
     {
         if (currentCell && !currentCell.TrailData.IsBought)
         {
-            if (_bank.Money >= currentCell.TrailData.Price)
+            if (_bank.GetMoney() >= currentCell.TrailData.Price)
             {
                 currentCell.TrailData.IsBought = true;
                 _bank.DecreaseMoney(currentCell.TrailData.Price);
@@ -69,7 +69,7 @@ public class TrailController : MonoBehaviour
             }
             else
             {
-                _notice.text = $"Недосточно монет! Вам нужно ещё {_bank.Money - currentCell.TrailData.Price} монет чтобы купить этот предмет.";
+                _notice.text = $"Недосточно монет! Вам нужно ещё {_bank.GetMoney() - currentCell.TrailData.Price} монет чтобы купить этот предмет.";
                 _notice.gameObject.SetActive(true);
                 TextFade(_notice);
             }

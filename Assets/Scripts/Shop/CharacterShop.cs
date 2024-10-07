@@ -7,6 +7,7 @@ using YG;
 
 public class CharacterShop : MonoBehaviour
 {
+    [SerializeField] private CharacterController _characterController;
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private Camera _shopCamera;
@@ -14,15 +15,19 @@ public class CharacterShop : MonoBehaviour
     [SerializeField] private GameObject _buttonBuy;
     [SerializeField] private GameObject _buttonEquip;
     [SerializeField] private GameObject _buttonEquiped;
-    [SerializeField] private CharacterController _characterController;
     [SerializeField] private BankVolute _bank;
-    [SerializeField] private List<GameObject> _models = new List<GameObject>();
 
+    private List<GameObject> _models = new List<GameObject>();
     private int _currentIndex;
 
     private void Start()
     {
+        _characterController ??= FindAnyObjectByType<CharacterController>();
         GenerateModels();
+        Button buy = _buttonBuy.GetComponent<Button>();
+        Button equip = _buttonEquip.GetComponent<Button>();
+        buy.onClick.AddListener(Buy);
+        equip.onClick.AddListener(Equip);
         UpdateVisual();
     }
     public void GenerateModels()
@@ -92,7 +97,7 @@ public class CharacterShop : MonoBehaviour
     public void Buy()
     {
         CharacterData character = _characterController.Characters[_currentIndex];
-        if (!character.Info.IsBought && _bank.Money >= character.Info.Price && !character.Info.IsDonate)
+        if (!character.Info.IsBought && _bank.GetMoney() >= character.Info.Price && !character.Info.IsDonate)
         {
             _bank.DecreaseMoney(character.Info.Price);
             character.Info.Buy();

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class LocationController : MonoBehaviour
 {
     [Header("Скрипт для управления локациями")]
-    [HorizontalLine(color: EColor.Orange)]
+    [HorizontalLine(color: EColor.Indigo)]
     [SerializeField] LocationData[] _locations;
     public LocationData[] Locations
     {

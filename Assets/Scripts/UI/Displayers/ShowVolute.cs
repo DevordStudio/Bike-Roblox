@@ -5,16 +5,20 @@ using UnityEngine;
 
 public class ShowVolute : MonoBehaviour
 {
+    [SerializeField] private BankVolute _bank;
     [SerializeField] private TMP_Text _moneyText;
     [SerializeField] private bool _playAnimation;
     [SerializeField, ShowIf(nameof(_playAnimation))] private float _animScale = 1.3F;
     [SerializeField, ShowIf(nameof(_playAnimation))] private float _animTime = 0.5F;
-    private void UpdateVolute(int money)
+    private void UpdateVolute()
     {
-        _moneyText.text = money.ToString();
+        _moneyText.text = _bank.GetMoney().ToString();
         Animation();
     }
-    private void Start() => BankVolute.OnMoneyValueChanged += UpdateVolute;
+    private void Start()
+    {
+        BankVolute.OnMoneyValueChanged += UpdateVolute;
+    }
     private void OnDestroy() => BankVolute.OnMoneyValueChanged -= UpdateVolute;
     private void Animation()
     {

@@ -18,13 +18,18 @@ public class LocationsShopController : MonoBehaviour
 
     private void Start()
     {
+        _locationController ??= FindAnyObjectByType<LocationController>();
+        InitButtons();
+        UpdateUI();
+    }
+    private void InitButtons()
+    {
         _nextButton.onClick.AddListener(Next);
         _previousButton.onClick.AddListener(Previous);
         Button buttonBuy = _buttonBuy.GetComponent<Button>();
         Button buttonPlay = _buttonPlay.GetComponent<Button>();
         buttonBuy.onClick.AddListener(Buy);
         buttonPlay.onClick.AddListener(Play);
-        UpdateUI();
     }
     public void Next()
     {
@@ -74,7 +79,7 @@ public class LocationsShopController : MonoBehaviour
     public void Buy()
     {
         LocationData loc = _locationController.Locations[_currentIndex];
-        if (!loc.LocationInfo.IsBought && _bank.Money >= loc.LocationInfo.Price && !loc.LocationInfo.IsDonate)
+        if (!loc.LocationInfo.IsBought && _bank.GetMoney() >= loc.LocationInfo.Price && !loc.LocationInfo.IsDonate)
         {
             _bank.DecreaseMoney(loc.LocationInfo.Price);
             loc.LocationInfo.Buy();

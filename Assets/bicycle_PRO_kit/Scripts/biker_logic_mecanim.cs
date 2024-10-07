@@ -206,9 +206,8 @@ public class biker_logic_mecanim : MonoBehaviour
             //    createRagDoll();
             //}
         }
-
         //scan do rider see POI
-        if (poi01.gameObject.activeSelf && distanceToPoi > Vector3.Distance(this.transform.position, poi01.transform.position))
+        if (poi01 && poi01.gameObject.activeSelf && distanceToPoi > Vector3.Distance(this.transform.position, poi01.transform.position))
         {
             lookPoint = poi01;
             //if not - still looking forward for a rigidbody POI right before bike
