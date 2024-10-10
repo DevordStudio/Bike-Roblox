@@ -77,7 +77,7 @@ public class bicycle_code : MonoBehaviour
                                        /////////////////////////////////////////////////// BICYCLE CODE ///////////////////////////////////////////////////////
     private float frontWheelAPD;// usualy 0.05f
     private GameObject pedals;
-    private pedalControls linkToStunt;
+    [SerializeField] private pedalControls linkToStunt;
     private bool rearPend;
 
     [Header("Проверка на землю")]
@@ -162,7 +162,7 @@ public class bicycle_code : MonoBehaviour
         outsideControls = ctrlHub.GetComponent<controlHub>();//to connect c# mobile control script to this one
 
         pedals = GameObject.Find("bicycle_pedals");
-        linkToStunt = pedals.GetComponent<pedalControls>();
+        //linkToStunt = pedals.GetComponent<pedalControls>();
 
         Vector3 setInitialTensor = GetComponent<Rigidbody>().inertiaTensor;//this string is necessary for Unity 5.3f with new PhysX feature when Tensor decoupled from center of mass
         GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);// now Center of Mass(CoM) is alligned to GameObject "CoM"

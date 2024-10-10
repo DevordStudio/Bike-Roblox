@@ -20,6 +20,14 @@ public class MoneyBoost : MonoBehaviour
             _timer = YandexGame.savesData.MoneyBoostTimer;
         }
     }
+    public void GetBoost()
+    {
+        if (!_isBoosted)
+        {
+            _isBoosted = true;
+            _bank.Is2X = _isBoosted;
+        }
+    }
     private void Update()
     {
         if (_isBoosted)

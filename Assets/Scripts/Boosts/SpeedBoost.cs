@@ -28,6 +28,7 @@ public class SpeedBoost : MonoBehaviour
         if (!_is2X)
         {
             _bikeCode.LegsPower *= _speedBoostCoff;
+            _is2X = true;
         }
     }
     private void Update()
@@ -36,6 +37,7 @@ public class SpeedBoost : MonoBehaviour
         {
             if (_timer >= _boostTime)
             {
+                _is2X = false;
                 _timer = 0;
                 _bikeCode.LegsPower /= _speedBoostCoff;
             }

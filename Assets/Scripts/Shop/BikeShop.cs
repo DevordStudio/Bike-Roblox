@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class BikeShop : MonoBehaviour
     [SerializeField] private MeshRenderer _frontWheelMR;
     [SerializeField] private MeshRenderer _backWheelMR;
     [SerializeField] private Camera _shopCamera;
+    [SerializeField] private Camera _mainCamera;
     [SerializeField] private Button _nextButton;
     [SerializeField] private Button _previousButton;
     [SerializeField] private GameObject _buttonBuy;
@@ -17,19 +19,31 @@ public class BikeShop : MonoBehaviour
     [SerializeField] private TMP_Text _bikeName;
     [SerializeField] private BikeController _bikeController;
     [SerializeField] private BankVolute _bank;
+    [SerializeField] private ParticleSystem _particleSwitch;
 
-    private Camera _mainCamera;
     private int _currentIndex;
 
     private void Start()
     {
-        _bikeController ??=FindAnyObjectByType<BikeController>();
+        _bikeController ??= FindAnyObjectByType<BikeController>();
+        InitButtons();
         UpdateVisual();
+    }
+    private void InitButtons()
+    {
+        _nextButton.onClick.AddListener(Next);
+        _previousButton.onClick.AddListener(Previous);
+        Button buy = _buttonBuy.GetComponent<Button>();
+        Button equip = _buttonEquip.GetComponent<Button>();
+        buy.onClick.AddListener(Buy);
+        equip.onClick.AddListener(Equip);
     }
     public void OpenShop()
     {
         _shopCamera.gameObject.SetActive(true);
         _mainCamera.gameObject.SetActive(false);
+        UpdateVisual();
+        _particleSwitch.Play();
     }
     public void CloseShop()
     {
@@ -44,6 +58,7 @@ public class BikeShop : MonoBehaviour
         }
         else _currentIndex = 0;
         UpdateVisual();
+        _particleSwitch.Play();
     }
     public void Previous()
     {
@@ -53,6 +68,7 @@ public class BikeShop : MonoBehaviour
         }
         else _currentIndex = _bikeController.Bikes.Length - 1;
         UpdateVisual();
+        _particleSwitch.Play();
     }
     public void UpdateVisual()
     {
@@ -85,13 +101,13 @@ public class BikeShop : MonoBehaviour
         {
             _bank.DecreaseMoney(currentBike.Price);
             currentBike.Buy();
-            UpdateVisual();
         }
         else if (currentBike.IsDonate)
         {
             YandexGame.BuyPayments(currentBike.Id.ToString());
         }
         else Debug.Log($"Недостаточно денег для покупки велосипеда {currentBike.Name}");//Прикрутить предупреждение для игрока
+        UpdateVisual();
     }
     public void Equip()
     {
@@ -105,5 +121,6 @@ public class BikeShop : MonoBehaviour
             currentBike.IsEquiped = true;
             _bikeController.ChangeBike(currentBike.Id);
         }
+        UpdateVisual();
     }
 }

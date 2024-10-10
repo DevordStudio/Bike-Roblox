@@ -9,10 +9,10 @@ public class PanelAnim : MonoBehaviour
     [SerializeField, ShowIf("IsScaleAnim"), HideIf("IsNone")] private float[] scaleValues;
     [SerializeField] private float _totalDuration;
     [SerializeField] private RectTransform _rectTransform;
-    private void Start()
-    {
-        PlayAnimEnable();
-    }
+    //private void Start()
+    //{
+    //    PlayAnimEnable();
+    //}
     private bool IsSlideAnim()
     {
         if (_animationType == PanelAnimType.SlideAnim)
@@ -33,6 +33,8 @@ public class PanelAnim : MonoBehaviour
 
     public void PlayAnimEnable()
     {
+        if(_rectTransform.gameObject.activeSelf) return;
+
         switch (_animationType)
         {
             case PanelAnimType.SlideAnim:

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class TrailCell : MonoBehaviour
 {
     public Image Icon;
-    public Image IconEquiped;
+    public GameObject IconEquiped;
     [HideInInspector] public TrailData TrailData;
     [HideInInspector] public TrailController TrailController;
     public Button ButtonChoose;
@@ -23,7 +23,6 @@ public class TrailCell : MonoBehaviour
     }
     public void UpdateCell()
     {
-        if (TrailData.IsEquiped)
-            IconEquiped.gameObject.SetActive(TrailData.IsEquiped);
+        IconEquiped.gameObject.SetActive(TrailData.IsEquiped);
     }
 }
