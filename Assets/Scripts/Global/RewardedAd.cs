@@ -43,6 +43,7 @@ public class RewardedAd : MonoBehaviour
     }
     private void GetRewarded(int id)
     {
+        if (id != 3) return;
         _bank.IncreaseMoney(_moneyForAd);
         if (IsAddition() && _moneyForAd + _rewardIncreaseValue <= _maxRewardValue)
         {

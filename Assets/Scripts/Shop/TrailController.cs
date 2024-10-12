@@ -18,14 +18,15 @@ public class TrailController : MonoBehaviour
     [SerializeField] private TrailRenderer _trailRenderer;
     [SerializeField] private BankVolute _bank;
 
-    /*[HideInInspector]*/ public TrailCell currentCell;
-    /*[HideInInspector]*/ public TrailCell lastCell;
+    /*[HideInInspector]*/
+    public TrailCell currentCell;
+    /*[HideInInspector]*/
+    public TrailCell lastCell;
 
     private void Start()
     {
         GenerateCells();
         _trailRenderer.material = currentCell.TrailData.Material;
-        lastCell = currentCell;
         UpdateUI();
     }
     public void UpdateUI()
@@ -134,6 +135,10 @@ public class TrailController : MonoBehaviour
         }
         cell.IconEquiped.gameObject.SetActive(data.IsEquiped);
         cell.TrailController = this;
-        if (data.IsEquiped) currentCell = cell;
+        if (data.IsEquiped)
+        {
+            currentCell = cell;
+            lastCell = cell;
+        }
     }
 }

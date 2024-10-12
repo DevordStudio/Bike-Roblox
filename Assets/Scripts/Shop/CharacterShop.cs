@@ -16,6 +16,9 @@ public class CharacterShop : MonoBehaviour
     [SerializeField] private GameObject _buttonEquip;
     [SerializeField] private GameObject _buttonEquiped;
     [SerializeField] private BankVolute _bank;
+    [SerializeField] private ParticleSystem _switchPS;
+    [SerializeField] private AudioClip _switchClip;
+    [SerializeField] private AudioSource _effectSource;
 
     private List<GameObject> _models = new List<GameObject>();
     private int _currentIndex;
@@ -30,6 +33,12 @@ public class CharacterShop : MonoBehaviour
         equip.onClick.AddListener(Equip);
         UpdateVisual();
     }
+    public void PlaySwitchEffect()
+    {
+        _switchPS.Play();
+        _effectSource.clip = _switchClip;
+        _effectSource.Play();
+    }
     public void GenerateModels()
     {
         foreach (var character in _characterController.Characters)
@@ -43,6 +52,7 @@ public class CharacterShop : MonoBehaviour
     {
         _mainCamera.gameObject.SetActive(false);
         _shopCamera.gameObject.SetActive(true);
+        PlaySwitchEffect();
     }
     public void CloseShop()
     {
@@ -57,6 +67,7 @@ public class CharacterShop : MonoBehaviour
         }
         else _currentIndex = 0;
         UpdateVisual();
+        PlaySwitchEffect();
     }
     public void Previous()
     {
@@ -66,6 +77,7 @@ public class CharacterShop : MonoBehaviour
         }
         else _currentIndex = _characterController.Characters.Length - 1;
         UpdateVisual();
+        PlaySwitchEffect();    
     }
     public void UpdateVisual()
     {

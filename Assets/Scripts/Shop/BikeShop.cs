@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +19,8 @@ public class BikeShop : MonoBehaviour
     [SerializeField] private BikeController _bikeController;
     [SerializeField] private BankVolute _bank;
     [SerializeField] private ParticleSystem _particleSwitch;
+    [SerializeField] private AudioClip _switchClip;
+    [SerializeField] private AudioSource _effectSource;
 
     private int _currentIndex;
 
@@ -28,6 +29,12 @@ public class BikeShop : MonoBehaviour
         _bikeController ??= FindAnyObjectByType<BikeController>();
         InitButtons();
         UpdateVisual();
+    }
+    private void PlaySwitchSound()
+    {
+        _particleSwitch.Play();
+        _effectSource.clip = _switchClip;
+        _effectSource.Play();
     }
     private void InitButtons()
     {
@@ -43,7 +50,7 @@ public class BikeShop : MonoBehaviour
         _shopCamera.gameObject.SetActive(true);
         _mainCamera.gameObject.SetActive(false);
         UpdateVisual();
-        _particleSwitch.Play();
+        PlaySwitchSound();
     }
     public void CloseShop()
     {
@@ -58,7 +65,7 @@ public class BikeShop : MonoBehaviour
         }
         else _currentIndex = 0;
         UpdateVisual();
-        _particleSwitch.Play();
+        PlaySwitchSound();
     }
     public void Previous()
     {
@@ -68,7 +75,7 @@ public class BikeShop : MonoBehaviour
         }
         else _currentIndex = _bikeController.Bikes.Length - 1;
         UpdateVisual();
-        _particleSwitch.Play();
+        PlaySwitchSound();
     }
     public void UpdateVisual()
     {

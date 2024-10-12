@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using YG;
 
 public class SpeedBoost : MonoBehaviour
@@ -10,6 +9,7 @@ public class SpeedBoost : MonoBehaviour
     [Tooltip("Число на которое умножается скорость")]
     [SerializeField] private float _speedBoostCoff = 2F;
     [SerializeField] private float _boostTime = 60F;
+    [SerializeField] private Image _reloadImage;
 
     private bool _is2X;
     private float _timer;
@@ -22,9 +22,17 @@ public class SpeedBoost : MonoBehaviour
             _bikeCode.LegsPower *= _speedBoostCoff;
             _timer = YandexGame.savesData.SpeedBoostTimer;
         }
+        YandexGame.RewardVideoEvent += GetBoost;
+        //_reloadImage.fillAmount = 0;
     }
-    public void GetBoost()
+    public void RewardShow()
     {
+        if (_is2X) return;
+        YandexGame.RewVideoShow(2);
+    }
+    private void GetBoost(int id)
+    {
+        if (id != 2) return;
         if (!_is2X)
         {
             _bikeCode.LegsPower *= _speedBoostCoff;
@@ -41,12 +49,20 @@ public class SpeedBoost : MonoBehaviour
                 _timer = 0;
                 _bikeCode.LegsPower /= _speedBoostCoff;
             }
-            else _timer += Time.deltaTime;
+            else
+            {
+                _timer += Time.deltaTime;
+                _reloadImage.fillAmount = 1 - (_timer / _boostTime);
+            }
         }
     }
     private void OnDisable()
     {
         YandexGame.savesData.Is2XSpeed = _is2X;
         YandexGame.savesData.SpeedBoostTimer = _timer;
+    }
+    private void OnDestroy()
+    {
+        YandexGame.RewardVideoEvent -= GetBoost;
     }
 }

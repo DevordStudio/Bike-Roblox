@@ -17,7 +17,7 @@ public class TrailCell : MonoBehaviour
     }
     public void SetTrail()
     {
-        TrailController.lastCell = TrailController.currentCell;
+        //TrailController.lastCell = TrailController.currentCell;
         TrailController.currentCell = this;
         TrailController.UpdateUI();
     }
