@@ -4,6 +4,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 
 public class bicycle_code : MonoBehaviour
 {
@@ -93,10 +94,30 @@ public class bicycle_code : MonoBehaviour
     [Header("Для интерфейса")]
     [Tooltip("Текст отображающий текущую скорость")]
     [SerializeField] private TMP_Text _speedText;
+    [SerializeField] private Color _boostedColor;
+
+    [Header("Анимация")]
+    [SerializeField] private GameObject _activeCharacter;
+    [SerializeField] private Animator _activeAnim;
+    [SerializeField] private float _targetFOV;
+    [SerializeField] private float _lerpSpeed;
+
+    private Camera _mainCamera;
+    private float _defFOV;
+
+    [Header("Звуки")]
+    [SerializeField] private AudioSource _speedSource;
+    [SerializeField] private float _soundSpeed = 35;
+    private bool _soundIsOn;
 
     [HideInInspector]
     public float bikeSpeed; //to know bike speed km/h
     public bool isReverseOn = false; //to turn On and Off reverse speed
+
+    public void ChangeCharacter(GameObject character)
+    {
+        _activeAnim = character.GetComponent<Animator>();
+    }
     ////////////////////////////////////////////////  ON SCREEN INFO ///////////////////////////////////////////////////////
     //void OnGUI()
     //{
@@ -147,14 +168,16 @@ public class bicycle_code : MonoBehaviour
     //}
     void Start()
     {
-
+        //CharacterController.OnCharacterChanged += ChangeCharacter;
+        SpeedBoost.OnConditionChanged += BoostedEffect;
         //if there is no pendulum linked to script in Editor, it means MTB have no rear suspension, so no movement of rear wheel(pendulum)
         if (rearPendulumn)
         {
             rearPend = true;
         }
         else rearPend = false;
-
+        _mainCamera = Camera.main;
+        _defFOV = _mainCamera.fieldOfView;
         //bicycle code
         frontWheelAPD = coll_frontWheel.forceAppPointDistance;
 
@@ -197,6 +220,10 @@ public class bicycle_code : MonoBehaviour
         tmpCollRW01.y = coll_rearWheel.transform.localPosition.y - coll_rearWheel.transform.localPosition.y / 20;
         coll_rearWheel.transform.localPosition = tmpCollRW01;
 
+    }
+    private void OnDestroy()
+    {
+        //CharacterController.OnCharacterChanged -= ChangeCharacter;
     }
     void FixedUpdate()
     {
@@ -624,9 +651,37 @@ public class bicycle_code : MonoBehaviour
             IsCanRestart = true;
         }
         else _timer += Time.deltaTime;
-
+        if (_activeAnim)
+        {
+            _activeAnim.SetFloat("Speed", bikeSpeed / 50);
+        }
+        if (bikeSpeed >= 35)
+        {
+            if (!_soundIsOn)
+            {
+                _speedSource.Play();
+                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _targetFOV, _lerpSpeed * Time.deltaTime);
+                //_speedSource.loop = true;
+                _soundIsOn = true;
+            }
+        }
+        else
+        {
+            if (_soundIsOn)
+            {
+                //_speedSource.loop = false;
+                _speedSource.Stop();
+                _soundIsOn = false;
+                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _defFOV, _lerpSpeed * Time.deltaTime);
+            }
+        }
         /////////////////////////////////////UI////////////////////////////////////////////
         _speedText.text = ((int)bikeSpeed).ToString();
+    }
+    private void BoostedEffect(bool isBoosted)
+    {
+        if (isBoosted) _speedText.color = _boostedColor;
+        else _speedText.color = Color.white;
     }
     ///////////////////////////////////////////// FUNCTIONS /////////////////////////////////////////////////////////
     void ApplyLocalPositionToVisuals(WheelCollider collider)

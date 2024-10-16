@@ -13,6 +13,8 @@ public class ShowVolute : MonoBehaviour
     [SerializeField, ShowIf(nameof(_isMultiple))] private TMP_Text[] _moneyTexts;
     [SerializeField, ShowIf(nameof(_playAnimation))] private float _animScale = 1.3F;
     [SerializeField, ShowIf(nameof(_playAnimation))] private float _animTime = 0.5F;
+    [SerializeField] private GameObject[] _glows;
+    [SerializeField] private Color _boostedColor;
     private void UpdateVolute()
     {
         if (_isMultiple)
@@ -29,12 +31,40 @@ public class ShowVolute : MonoBehaviour
             Animation(_moneyText.transform);
         }
     }
+    public void UpdateBoost(bool active)
+    {
+        if (active)
+        {
+            if (_isMultiple)
+            {
+                foreach (var item in _moneyTexts)
+                    item.color = _boostedColor;
+            }
+            else _moneyText.color = _boostedColor;
+        }
+        else
+        {
+            if (_isMultiple)
+            {
+                foreach (var item in _moneyTexts)
+                    item.color = Color.white;
+            }
+            else _moneyText.color = Color.white;
+        }
+        foreach (var item in _glows)
+            item.SetActive(active);
+    }
     private void Start()
     {
         BankVolute.OnMoneyValueChanged += UpdateVolute;
+        MoneyBoost.OnBoostChanged += UpdateBoost;
         UpdateVolute();
     }
-    private void OnDestroy() => BankVolute.OnMoneyValueChanged -= UpdateVolute;
+    private void OnDestroy()
+    {
+        BankVolute.OnMoneyValueChanged -= UpdateVolute;
+        MoneyBoost.OnBoostChanged -= UpdateBoost;
+    }
     private void Animation(Transform trans)
     {
         Sequence sequence = DOTween.Sequence();

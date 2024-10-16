@@ -9,6 +9,7 @@ public class BankVolute : ScriptableObject
     public bool Is2X;
 
     public static event Action OnMoneyValueChanged;
+    public static event Action OnMoneyIncrease;
     public void IncreaseMoney(int amount)
     {
         if (amount < 0) return;
@@ -16,6 +17,7 @@ public class BankVolute : ScriptableObject
             _money += 2 * amount;
         else _money += amount;
         OnMoneyValueChanged?.Invoke();
+        OnMoneyIncrease?.Invoke();
     }
     public void DecreaseMoney(int amount)
     {

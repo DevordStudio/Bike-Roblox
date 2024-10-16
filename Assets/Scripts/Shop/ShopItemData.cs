@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using YG;
 
@@ -7,8 +8,23 @@ public class ShopItemData : ScriptableObject
     public int Price = 100;
     public int Id;
     public bool IsBought;
-    public bool IsEquiped;
+    [SerializeField] private bool _isEquiped;
+    public bool IsEquiped
+    { 
+        get
+        {
+            return _isEquiped;
+        }
+        set
+        {
+            _isEquiped = value;
+            if (value == true) OnItemEquiped?.Invoke();
+        }
+    }
     public bool IsDonate;
+
+    public static event Action OnItemBought;
+    public static event Action OnItemEquiped;
     private void OnEnable()
     {
         if (IsDonate)
@@ -28,6 +44,7 @@ public class ShopItemData : ScriptableObject
         if (!IsBought)
         {
             IsBought = true;
+            OnItemBought?.Invoke();
             Debug.Log($"Предмет {Name} был куплен за {Price} монет");
         }
         else Debug.LogError("Предмет уже куплен или не хватает денег!");

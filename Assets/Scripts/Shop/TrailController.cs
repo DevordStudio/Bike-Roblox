@@ -77,7 +77,7 @@ public class TrailController : MonoBehaviour
         {
             if (_bank.GetMoney() >= currentCell.TrailData.Price)
             {
-                currentCell.TrailData.IsBought = true;
+                currentCell.TrailData.Buy();
                 _bank.DecreaseMoney(currentCell.TrailData.Price);
                 Debug.Log($"Трейл {currentCell.TrailData.Name} был куплен за {currentCell.TrailData.Price}");
             }

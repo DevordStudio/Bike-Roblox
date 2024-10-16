@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using System;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour
@@ -14,6 +15,7 @@ public class CharacterController : MonoBehaviour
         }
         private set { }
     }
+    [SerializeField] private bicycle_code _bike;
     public int ActiveCharacterId; //{ get; private set; }
 
     private void Start()
@@ -40,8 +42,14 @@ public class CharacterController : MonoBehaviour
     {
         foreach (var character in _characters)
         {
-            character.Character.SetActive(character.Info.Id == ActiveCharacterId);
+            if (character.Info.Id == ActiveCharacterId)
+            {
+                character.Character.SetActive(true);
+                _bike.ChangeCharacter(character.Character);
+                Debug.Log(character.Character);
+            }
+            else character.Character.SetActive(false);
         }
     }
-    private void OnDestroy() => CharacterInfo.OnCharacterChanged += ChangeCharacter;
+    private void OnDestroy() => CharacterInfo.OnCharacterChanged -= ChangeCharacter;
 }

@@ -25,6 +25,7 @@ namespace YG
         public bool Is2XMoney;
         public float SpeedBoostTimer;
         public float MoneyBoostTimer;
+        public float TempKdRotateRoulette;
 
         // Поля (сохранения) можно удалять и создавать новые. При обновлении игры сохранения ломаться не должны
 
