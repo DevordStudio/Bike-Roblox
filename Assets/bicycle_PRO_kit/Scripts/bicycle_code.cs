@@ -97,8 +97,9 @@ public class bicycle_code : MonoBehaviour
     [SerializeField] private Color _boostedColor;
 
     [Header("Анимация")]
-    [SerializeField] private GameObject _activeCharacter;
-    [SerializeField] private Animator _activeAnim;
+    private GameObject _activeCharacter;
+    private Animator _activeAnim;
+    [SerializeField] private GameObject _speedParticles;
     [SerializeField] private float _targetFOV;
     [SerializeField] private float _lerpSpeed;
 
@@ -660,20 +661,31 @@ public class bicycle_code : MonoBehaviour
             if (!_soundIsOn)
             {
                 _speedSource.Play();
-                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _targetFOV, _lerpSpeed * Time.deltaTime);
-                //_speedSource.loop = true;
                 _soundIsOn = true;
             }
+
+            if (_speedSource.volume < 1)
+                _speedSource.volume = Mathf.Lerp(_speedSource.volume, 1, _lerpSpeed * Time.deltaTime);
+
+            _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _targetFOV, _lerpSpeed * Time.deltaTime);
+            _speedParticles.SetActive(true);
         }
         else
         {
             if (_soundIsOn)
             {
-                //_speedSource.loop = false;
-                _speedSource.Stop();
-                _soundIsOn = false;
-                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _defFOV, _lerpSpeed * Time.deltaTime);
+                if (_speedSource.volume > 0)
+                    _speedSource.volume = Mathf.Lerp(_speedSource.volume, 0, _lerpSpeed * Time.deltaTime);
+
+                if (_speedSource.volume < 0.01f)
+                {
+                    _speedSource.Stop();
+                    _soundIsOn = false;
+                }
             }
+
+            _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _defFOV, _lerpSpeed * Time.deltaTime);
+            _speedParticles.SetActive(false);
         }
         /////////////////////////////////////UI////////////////////////////////////////////
         _speedText.text = ((int)bikeSpeed).ToString();

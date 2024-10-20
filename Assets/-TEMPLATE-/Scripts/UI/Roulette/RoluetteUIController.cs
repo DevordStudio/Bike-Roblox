@@ -7,7 +7,10 @@ using YG;
 public class RoluetteUIController : MonoBehaviour
 {
     [SerializeField] private Roulette _roulette;
-    [SerializeField] private string _prefixTimerInPanel = "Бесплатная крутка";
+    [SerializeField] private string _prefixTimerInPanelRu = "Бесплатная крутка";
+    [SerializeField] private string _prefixTimerInPanelEn = "Free spin";
+    [SerializeField] private string _trText;
+    [SerializeField] private string _prefixTimerInPanelTr;
     [SerializeField] private TextMeshProUGUI _timerText;
     [SerializeField] private TextMeshProUGUI _timerInPanelText;
     [SerializeField] private Button _startRouletteButton;
@@ -19,6 +22,7 @@ public class RoluetteUIController : MonoBehaviour
     [SerializeField] private float _cooldownTime = 300f;
     [SerializeField] private GameObject _freeSpinMarker;
     [SerializeField] private GameObject _timerGO;
+
 
     private void Start()
     {
@@ -94,7 +98,12 @@ public class RoluetteUIController : MonoBehaviour
     private void UpdateTimeUI(float time)
     {
         _timerText.text = FormatTime(time);
-        _timerInPanelText.text = time > 0 ? _prefixTimerInPanel + " " + FormatTime(time) : "Доступна бесплатная крутка";
+        if (YandexGame.EnvironmentData.language == "ru")
+            _timerInPanelText.text = time > 0 ? _prefixTimerInPanelRu + " " + FormatTime(time) : "Доступна бесплатная крутка";
+        else if (YandexGame.EnvironmentData.language == "tr")
+            _timerInPanelText.text = time > 0 ? _prefixTimerInPanelTr + " " + FormatTime(time) : _trText;
+        else 
+            _timerInPanelText.text = time > 0 ? _prefixTimerInPanelEn + " " + FormatTime(time) : "Free spin unlocked";
     }
 
     private void OnApplicationQuit() => SaveProgress();

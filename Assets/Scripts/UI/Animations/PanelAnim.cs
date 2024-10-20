@@ -33,7 +33,7 @@ public class PanelAnim : MonoBehaviour
 
     public void PlayAnimEnable()
     {
-        if(_rectTransform.gameObject.activeSelf) return;
+        //if(_rectTransform.gameObject.activeSelf) return;
 
         switch (_animationType)
         {

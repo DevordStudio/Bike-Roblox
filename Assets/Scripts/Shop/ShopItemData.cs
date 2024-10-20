@@ -10,7 +10,7 @@ public class ShopItemData : ScriptableObject
     public bool IsBought;
     [SerializeField] private bool _isEquiped;
     public bool IsEquiped
-    { 
+    {
         get
         {
             return _isEquiped;
@@ -21,6 +21,9 @@ public class ShopItemData : ScriptableObject
             if (value == true) OnItemEquiped?.Invoke();
         }
     }
+    public string NameRus;
+    public string NameEn;
+    public string NameTr;
     public bool IsDonate;
 
     public static event Action OnItemBought;

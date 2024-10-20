@@ -4,10 +4,10 @@ using YG;
 
 public class LanguageSwitcher : MonoBehaviour
 {
-    private void Start()
-    {
-        ChangeLanguage(YandexGame.EnvironmentData.language);
-    }
+    //private void Start()
+    //{
+    //    ChangeLanguage(YandexGame.EnvironmentData.language);
+    //}
     public void ChangeLanguage(string language)
     {
         switch (language)

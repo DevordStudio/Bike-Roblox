@@ -5,27 +5,22 @@ using UnityEngine;
 public class ButtonAnim : MonoBehaviour
 {
     [SerializeField, ShowIf(nameof(IsScale)), HideIf(nameof(IsScale))] private float _animScale = 1.3F;
-    [SerializeField, ShowIf(nameof(IsSlide)), HideIf(nameof(IsNone))] private float _moveValue = 100;
+    [SerializeField, ShowIf(nameof(IsSlide)), HideIf(nameof(IsNone))] private float _targetYPosition = -100;
     [SerializeField] private float _animTime = 0.6F;
     [SerializeField] private AnimType _animation;
 
+    private float _tempPosY;
     private bool IsNone()
     {
-        if(_animation == AnimType.None)
-            return true;
-        return false;
+        return _animation == AnimType.None;
     }
     private bool IsScale()
     {
-        if(_animation == AnimType.Scale) 
-            return true;
-        return false;
+        return _animation == AnimType.Scale;
     }
     private bool IsSlide()
     {
-        if(_animation == AnimType.DownSlide)
-            return true;
-        return false;
+        return _animation == AnimType.DownSlide;
     }
     private RectTransform _rect;
     private bool _isMoving;
@@ -36,10 +31,13 @@ public class ButtonAnim : MonoBehaviour
         Scale,
         DownSlide,
     }
+
     private void Start()
     {
         _rect = GetComponent<RectTransform>();
+        _tempPosY = _rect.anchoredPosition.y;
     }
+
     public void OnEnter()
     {
         switch (_animation)
@@ -50,10 +48,11 @@ public class ButtonAnim : MonoBehaviour
                 ScaleOnEnter();
                 break;
             case AnimType.DownSlide:
-                MoveDown();
+                MoveToTargetY();
                 break;
         }
     }
+
     public void OnExit()
     {
         switch (_animation)
@@ -64,30 +63,36 @@ public class ButtonAnim : MonoBehaviour
                 ScaleOnExit();
                 break;
             case AnimType.DownSlide:
-                MoveUp();
+                MoveBackToOriginalY();
                 break;
         }
     }
-    private void MoveDown()
+
+    private void MoveToTargetY()
     {
-        Vector3 startPosition = _rect.anchoredPosition;
         _isMoving = true;
-        _rect.DOAnchorPosY(startPosition.y - _moveValue, _animTime / 2).SetEase(Ease.OutQuad).OnComplete(() => _isMoving = false);
+        _rect.DOAnchorPosY(_targetYPosition, _animTime / 2)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() => _isMoving = false);
     }
-    private void MoveUp()
+
+    private void MoveBackToOriginalY()
     {
-        Vector3 startPosition = _rect.anchoredPosition;
         _isMoving = true;
-        _rect.DOAnchorPosY(startPosition.y + _moveValue, _animTime / 2).SetEase(Ease.OutQuad).OnComplete(() => _isMoving = false);
+        _rect.DOAnchorPosY(_tempPosY, _animTime / 2)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() => _isMoving = false);
     }
+
     private void ScaleOnEnter() => transform.DOScale(_animScale, _animTime / 2);
     private void ScaleOnExit() => transform.DOScale(1F, _animTime / 2);
+
     private void OnDisable()
     {
         transform.localScale = new Vector3(1, 1, 1);
         if (_isMoving)
         {
-            _rect.anchoredPosition = _rect.anchoredPosition + Vector2.up * _moveValue;
+            _rect.anchoredPosition = new Vector2(_rect.anchoredPosition.x, _tempPosY);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace YG
         public float SpeedBoostTimer;
         public float MoneyBoostTimer;
         public float TempKdRotateRoulette;
+        public string petInventoryData;
 
         // Поля (сохранения) можно удалять и создавать новые. При обновлении игры сохранения ломаться не должны
 

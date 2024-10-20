@@ -27,8 +27,13 @@ public class BikeShop : MonoBehaviour
     private void Start()
     {
         _bikeController ??= FindAnyObjectByType<BikeController>();
+        YandexGame.SwitchLangEvent += UpdateText;
         InitButtons();
         UpdateVisual();
+    }
+    private void OnDisable()
+    {
+        YandexGame.SwitchLangEvent -= UpdateText;
     }
     private void PlaySwitchSound()
     {
@@ -77,11 +82,23 @@ public class BikeShop : MonoBehaviour
         UpdateVisual();
         PlaySwitchSound();
     }
+    private void UpdateText(string lang)
+    {
+        BikeData currentBike = _bikeController.Bikes[_currentIndex];
+        if (lang == "ru")
+            _bikeName.text = currentBike.NameRus;
+        else if (lang == "en")
+            _bikeName.text = currentBike.NameEn;
+        else if (lang == "tr")
+            _bikeName.text = currentBike.NameTr;
+        else _bikeName.text = currentBike.NameEn;
+    }
     public void UpdateVisual()
     {
         BikeData currentBike = _bikeController.Bikes[_currentIndex];
         currentBike.ChangeMaterials(_chasicsMR, _frontWheelMR, _backWheelMR);
-        _bikeName.text = currentBike.Name;
+        //_bikeName.text = currentBike.Name;
+        UpdateText(YandexGame.EnvironmentData.language);
         if (!currentBike.IsBought)//Если велосипед не куплен
         {
             _buttonBuy.SetActive(true);

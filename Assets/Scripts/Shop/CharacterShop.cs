@@ -31,7 +31,12 @@ public class CharacterShop : MonoBehaviour
         Button equip = _buttonEquip.GetComponent<Button>();
         buy.onClick.AddListener(Buy);
         equip.onClick.AddListener(Equip);
+        YandexGame.SwitchLangEvent += UpdateText;
         UpdateVisual();
+    }
+    private void OnDisable()
+    {
+        YandexGame.SwitchLangEvent -= UpdateText;
     }
     public void PlaySwitchEffect()
     {
@@ -44,6 +49,9 @@ public class CharacterShop : MonoBehaviour
         foreach (var character in _characterController.Characters)
         {
             var model = Instantiate(character.CharacterModel, _spawnPoint.transform);
+            model.SetActive(character.Info.Id == _characterController.Characters[_currentIndex].Info.Id);
+            Animator animator = model.GetComponent<Animator>();
+            animator.SetBool("Idle", true);
             model.name = character.Info.Id.ToString();
             _models.Add(model);
         }
@@ -77,7 +85,18 @@ public class CharacterShop : MonoBehaviour
         }
         else _currentIndex = _characterController.Characters.Length - 1;
         UpdateVisual();
-        PlaySwitchEffect();    
+        PlaySwitchEffect();
+    }
+    private void UpdateText(string lang)
+    {
+        CharacterData character = _characterController.Characters[_currentIndex];
+        if (lang == "ru")
+            _nameText.text = character.Info.NameRus;
+        else if (lang == "en")
+            _nameText.text = character.Info.NameEn;
+        else if (lang == "tr")
+            _nameText.text = character.Info.NameTr;
+        else _nameText.text = character.Info.NameEn;
     }
     public void UpdateVisual()
     {
@@ -86,7 +105,8 @@ public class CharacterShop : MonoBehaviour
         {
             model.SetActive(character.Info.Id.ToString() == model.name);
         }
-        _nameText.text = character.Info.Name;
+        //_nameText.text = character.Info.Name;
+        UpdateText(YandexGame.EnvironmentData.language);
         if (!character.Info.IsBought) //Если персонаж не куплен
         {
             _buttonBuy.SetActive(true);

@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using YG;
 
 public class TrailController : MonoBehaviour
 {
@@ -43,7 +44,14 @@ public class TrailController : MonoBehaviour
                 _currentCellIcon.color = Color.white;
                 _currentCellIcon.material = currentCell.TrailData.Material;
             }
-            _name.text = currentCell.TrailData.Name;
+            //_name.text = currentCell.TrailData.Name;
+            if (YandexGame.EnvironmentData.language == "ru")
+                _name.text = currentCell.TrailData.NameRus;
+            else if (YandexGame.EnvironmentData.language == "en")
+                _name.text = currentCell.TrailData.NameEn;
+            else if (YandexGame.EnvironmentData.language == "tr")
+                _name.text = currentCell.TrailData.NameTr;
+            else _name.text = currentCell.TrailData.NameEn;
             //SpeedBoost
             if (!currentCell.TrailData.IsBought && !currentCell.TrailData.IsEquiped)//ме йсокем х ме бшапюм
             {
