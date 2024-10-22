@@ -1,0 +1,19 @@
+{
+    "idSave": 217,
+    "isFirstSession": false,
+    "language": "tr",
+    "promptDone": false,
+    "money": 1,
+    "newPlayerName": "Hello!",
+    "openLevels": [
+        false,
+        true,
+        false
+    ],
+    "Money": 0,
+    "Is2XSpeed": false,
+    "Is2XMoney": false,
+    "SpeedBoostTimer": 0.0,
+    "MoneyBoostTimer": 0.0,
+    "TempKdRotateRoulette": 0.0
+}

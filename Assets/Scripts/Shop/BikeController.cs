@@ -20,12 +20,20 @@ public class BikeController : MonoBehaviour
     [SerializeField] private MeshRenderer _wheelFrontMR;
     [Tooltip("Mesh Renderer заднего колеса")]
     [SerializeField] private MeshRenderer _wheelBackMR;
-    [SerializeField] private GameObject _bikeModel;
+    //[SerializeField] private GameObject _bikeModel;
 
     public int ActiveBikeId { get; private set; }
 
     private void Start()
     {
+        foreach (var bike in _bikes)//Изменить загрузку
+        {
+            if (bike.IsEquiped)
+            {
+                ActiveBikeId = bike.Id;
+                break;
+            }
+        }
         ActivateCurrentBike();
     }
     public void ChangeBike(int Id)

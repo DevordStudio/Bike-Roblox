@@ -16,6 +16,9 @@ public class CharacterShop : MonoBehaviour
     [SerializeField] private GameObject _buttonEquip;
     [SerializeField] private GameObject _buttonEquiped;
     [SerializeField] private BankVolute _bank;
+    [SerializeField] private ParticleSystem _switchPS;
+    [SerializeField] private AudioClip _switchClip;
+    [SerializeField] private AudioSource _effectSource;
 
     private List<GameObject> _models = new List<GameObject>();
     private int _currentIndex;
@@ -28,13 +31,27 @@ public class CharacterShop : MonoBehaviour
         Button equip = _buttonEquip.GetComponent<Button>();
         buy.onClick.AddListener(Buy);
         equip.onClick.AddListener(Equip);
+        YandexGame.SwitchLangEvent += UpdateText;
         UpdateVisual();
+    }
+    private void OnDisable()
+    {
+        YandexGame.SwitchLangEvent -= UpdateText;
+    }
+    public void PlaySwitchEffect()
+    {
+        _switchPS.Play();
+        _effectSource.clip = _switchClip;
+        _effectSource.Play();
     }
     public void GenerateModels()
     {
         foreach (var character in _characterController.Characters)
         {
             var model = Instantiate(character.CharacterModel, _spawnPoint.transform);
+            model.SetActive(character.Info.Id == _characterController.Characters[_currentIndex].Info.Id);
+            Animator animator = model.GetComponent<Animator>();
+            animator.SetBool("Idle", true);
             model.name = character.Info.Id.ToString();
             _models.Add(model);
         }
@@ -43,6 +60,7 @@ public class CharacterShop : MonoBehaviour
     {
         _mainCamera.gameObject.SetActive(false);
         _shopCamera.gameObject.SetActive(true);
+        PlaySwitchEffect();
     }
     public void CloseShop()
     {
@@ -57,6 +75,7 @@ public class CharacterShop : MonoBehaviour
         }
         else _currentIndex = 0;
         UpdateVisual();
+        PlaySwitchEffect();
     }
     public void Previous()
     {
@@ -66,6 +85,18 @@ public class CharacterShop : MonoBehaviour
         }
         else _currentIndex = _characterController.Characters.Length - 1;
         UpdateVisual();
+        PlaySwitchEffect();
+    }
+    private void UpdateText(string lang)
+    {
+        CharacterData character = _characterController.Characters[_currentIndex];
+        if (lang == "ru")
+            _nameText.text = character.Info.NameRus;
+        else if (lang == "en")
+            _nameText.text = character.Info.NameEn;
+        else if (lang == "tr")
+            _nameText.text = character.Info.NameTr;
+        else _nameText.text = character.Info.NameEn;
     }
     public void UpdateVisual()
     {
@@ -74,7 +105,8 @@ public class CharacterShop : MonoBehaviour
         {
             model.SetActive(character.Info.Id.ToString() == model.name);
         }
-        _nameText.text = character.Info.Name;
+        //_nameText.text = character.Info.Name;
+        UpdateText(YandexGame.EnvironmentData.language);
         if (!character.Info.IsBought) //Если персонаж не куплен
         {
             _buttonBuy.SetActive(true);

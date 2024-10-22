@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using YG;
@@ -19,8 +20,13 @@ public class LocationsShopController : MonoBehaviour
     private void Start()
     {
         _locationController ??= FindAnyObjectByType<LocationController>();
+        YandexGame.SwitchLangEvent += UpdateName;
         InitButtons();
         UpdateUI();
+    }
+    private void OnDisable()
+    {
+        YandexGame.SwitchLangEvent -= UpdateName;
     }
     private void InitButtons()
     {
@@ -49,13 +55,24 @@ public class LocationsShopController : MonoBehaviour
         else _currentIndex = _locationController.Locations.Length - 1;
         UpdateUI();
     }
+    private void UpdateName(string lang)
+    {
+        LocationData currentLocation = _locationController.Locations[_currentIndex];
+        if (lang == "ru")
+            _nameText.text = currentLocation.LocationInfo.NameRus;
+        else if (lang == "en")
+            _nameText.text = currentLocation.LocationInfo.NameEn;
+        else if (lang == "tr")
+            _nameText.text = currentLocation.LocationInfo.NameTr;
+    }
     public void UpdateUI()
     {
         LocationData currentLocation = _locationController.Locations[_currentIndex];
+        UpdateName(YandexGame.EnvironmentData.language);
         if (currentLocation)
         {
             _locationImage.sprite = currentLocation.LocationInfo.Sprite;
-            _nameText.text = currentLocation.LocationInfo.Name;
+            //_nameText.text = currentLocation.LocationInfo.Name;
             if (!currentLocation.LocationInfo.IsBought) //Если карта не куплена
             {
                 _buttonBuy.SetActive(true);

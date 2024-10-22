@@ -54,9 +54,9 @@ public class RotatePulseAnim : MonoBehaviour
     }
     private void AnimRotate()
     {
-        _target.transform.DORotate(new Vector3(0, 0, 360), 360f / _rotationSpeed, RotateMode.FastBeyond360)
-                 .SetEase(Ease.Linear)
-                 .SetLoops(-1, LoopType.Restart);
+        _target.transform.DOLocalRotate(new Vector3(0, 0, 360), 360f / _rotationSpeed, RotateMode.FastBeyond360)
+                  .SetEase(Ease.Linear)
+                  .SetLoops(-1, LoopType.Restart);
     }
     private void AnimPulse()
     {

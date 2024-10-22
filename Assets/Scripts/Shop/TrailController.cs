@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using YG;
 
 public class TrailController : MonoBehaviour
 {
@@ -18,13 +19,13 @@ public class TrailController : MonoBehaviour
     [SerializeField] private TrailRenderer _trailRenderer;
     [SerializeField] private BankVolute _bank;
 
-    [HideInInspector] public TrailCell currentCell;
-    [HideInInspector] public TrailCell lastCell;
+    /*[HideInInspector]*/
+    public TrailCell currentCell;
+    /*[HideInInspector]*/
+    public TrailCell lastCell;
 
     private void Start()
     {
-        _trails = null;
-        _trails = Resources.LoadAll<TrailData>("ShopItems/TrailDatas");
         GenerateCells();
         _trailRenderer.material = currentCell.TrailData.Material;
         UpdateUI();
@@ -33,8 +34,24 @@ public class TrailController : MonoBehaviour
     {
         if (currentCell)
         {
-            _currentCellIcon.color = currentCell.TrailData.Material.color;
-            _name.text = currentCell.TrailData.Name;
+            if (!currentCell.TrailData.Material.GetTexture("_BaseMap"))
+            {
+                _currentCellIcon.material = null;
+                _currentCellIcon.color = currentCell.TrailData.Material.color;
+            }
+            else
+            {
+                _currentCellIcon.color = Color.white;
+                _currentCellIcon.material = currentCell.TrailData.Material;
+            }
+            //_name.text = currentCell.TrailData.Name;
+            if (YandexGame.EnvironmentData.language == "ru")
+                _name.text = currentCell.TrailData.NameRus;
+            else if (YandexGame.EnvironmentData.language == "en")
+                _name.text = currentCell.TrailData.NameEn;
+            else if (YandexGame.EnvironmentData.language == "tr")
+                _name.text = currentCell.TrailData.NameTr;
+            else _name.text = currentCell.TrailData.NameEn;
             //SpeedBoost
             if (!currentCell.TrailData.IsBought && !currentCell.TrailData.IsEquiped)//НЕ КУПЛЕН И НЕ ВЫБРАН
             {
@@ -55,7 +72,12 @@ public class TrailController : MonoBehaviour
                 _buttonEquiped.SetActive(true);
             }
         }
-        else { }//Отключить всё если currentCell нулевой
+        else
+        {
+            _buttonBuy.SetActive(false);
+            _buttonEquip.SetActive(false);
+            _buttonEquiped.SetActive(false);
+        }//Отключить всё если currentCell нулевой
     }
     public void Buy()
     {
@@ -63,7 +85,7 @@ public class TrailController : MonoBehaviour
         {
             if (_bank.GetMoney() >= currentCell.TrailData.Price)
             {
-                currentCell.TrailData.IsBought = true;
+                currentCell.TrailData.Buy();
                 _bank.DecreaseMoney(currentCell.TrailData.Price);
                 Debug.Log($"Трейл {currentCell.TrailData.Name} был куплен за {currentCell.TrailData.Price}");
             }
@@ -82,6 +104,8 @@ public class TrailController : MonoBehaviour
         {
             lastCell.TrailData.IsEquiped = false;
             currentCell.TrailData.IsEquiped = true;
+            lastCell.UpdateCell();
+            currentCell.UpdateCell();
             lastCell = currentCell;
             _trailRenderer.material = currentCell.TrailData.Material;
         }
@@ -89,8 +113,9 @@ public class TrailController : MonoBehaviour
     }
     public void TextFade(TMP_Text text)
     {
-        Color color = text.color;
         Sequence sequence = DOTween.Sequence();
+        Color color = text.color;
+        text.color = new Color(color.r, color.g, color.b, 1);
         sequence.Append(text.DOColor(new Color(color.r, color.g, color.b, 0), 3.5F));
         sequence.AppendCallback(() =>
         {
@@ -109,9 +134,19 @@ public class TrailController : MonoBehaviour
     public void InitCell(TrailCell cell, TrailData data)
     {
         cell.TrailData = data;
-        cell.Icon.color = data.Material.color;
+        if (!data.Material.GetTexture("_BaseMap"))
+            cell.Icon.color = cell.TrailData.Material.color;
+        else
+        {
+            cell.Icon.color = Color.white;
+            cell.Icon.material = cell.TrailData.Material;
+        }
         cell.IconEquiped.gameObject.SetActive(data.IsEquiped);
         cell.TrailController = this;
-        if(data.IsEquiped) currentCell = cell;
+        if (data.IsEquiped)
+        {
+            currentCell = cell;
+            lastCell = cell;
+        }
     }
 }
