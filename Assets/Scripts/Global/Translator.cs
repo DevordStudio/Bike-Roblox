@@ -13,7 +13,7 @@ public class Translator : MonoBehaviour
     {
         YandexGame.SwitchLangEvent += ChangeText;
         _text ??= GetComponent<TMP_Text>();
-        ChangeText(YandexGame.EnvironmentData.language);
+        ChangeText(YandexGame.lang);
     }
     private void OnDestroy() => YandexGame.SwitchLangEvent -= ChangeText;
     private void ChangeText(string lang)

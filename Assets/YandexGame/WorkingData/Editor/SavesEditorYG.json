@@ -1,5 +1,5 @@
 {
-    "idSave": 217,
+    "idSave": 62,
     "isFirstSession": false,
     "language": "tr",
     "promptDone": false,
@@ -15,5 +15,7 @@
     "Is2XMoney": false,
     "SpeedBoostTimer": 0.0,
     "MoneyBoostTimer": 0.0,
-    "TempKdRotateRoulette": 0.0
+    "TempKdRotateRoulette": 0.0,
+    "petInventoryData": "{\"pets\":[{\"petDataId\":784,\"IsEquiped\":true,\"Id\":1},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":2},{\"petDataId\":784,\"IsEquiped\":true,\"Id\":3},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":4},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":5},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":6},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":7},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":8},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":9},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":10},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":11},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":12}],\"nextId\":13}",
+    "MoneyRecord": 0
 }

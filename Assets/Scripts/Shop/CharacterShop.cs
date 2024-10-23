@@ -106,7 +106,7 @@ public class CharacterShop : MonoBehaviour
             model.SetActive(character.Info.Id.ToString() == model.name);
         }
         //_nameText.text = character.Info.Name;
-        UpdateText(YandexGame.EnvironmentData.language);
+        UpdateText(YandexGame.lang);
         if (!character.Info.IsBought) //Если персонаж не куплен
         {
             _buttonBuy.SetActive(true);

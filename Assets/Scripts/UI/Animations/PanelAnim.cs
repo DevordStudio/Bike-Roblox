@@ -2,6 +2,7 @@ using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
 
+[System.Serializable]
 public class PanelAnim : MonoBehaviour
 {
     [SerializeField] private PanelAnimType _animationType;

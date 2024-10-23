@@ -11,6 +11,7 @@ public class PetsInventoryUI : MonoBehaviour
     [SerializeField] private Image _currentPetImg;
     [SerializeField] private TMP_Text _currentPetName;
     [SerializeField] private GameObject _buttonEquip;
+    [SerializeField] private GameObject _buttonUnequip;
     [SerializeField] private TMP_Text _petsCount;
     [SerializeField] private TMP_Text _equipedPetsCount;
 
@@ -20,22 +21,30 @@ public class PetsInventoryUI : MonoBehaviour
     private void Start()
     {
         PetCell.OnCellSelected += UpdateUI;
+        _invent.OnPetAdded += GenerateCell;
         _invent.OnInventoryChanged += UpdateCountText;
+
         foreach (var pet in _invent.GetPets())
-        {
             GenerateCell(pet);
+
+        if (_cells.Count > 0)
+        {
+            _currentCell = _cells[0];
+            UpdateUI(_currentCell);
         }
-        UpdateUI(_currentCell);
+        else Debug.LogWarning("No pets found in inventory.");
     }
     private void OnDisable()
     {
         PetCell.OnCellSelected -= UpdateUI;
         _invent.OnInventoryChanged -= UpdateCountText;
+        _invent.OnPetAdded -= GenerateCell;
     }
     private void GenerateCell(PetInInventory pet)
     {
         var cell = Instantiate(_cellPrefab, _cellGOContainer.transform);
         var cellCode = cell.GetComponent<PetCell>();
+        if (_cells.Count == 0) _currentCell = cellCode;
         _cells.Add(cellCode);
         InitCell(cellCode, pet);
         UpdateCountText();
@@ -52,14 +61,28 @@ public class PetsInventoryUI : MonoBehaviour
         Destroy(removableCell.gameObject);
         UpdateCountText();
     }
+    //private void InitCell(PetCell cellCode, PetInInventory petCode)
+    //{
+    //    cellCode.Pet = petCode;
+    //    cellCode.IconPet.sprite = petCode.PetData.Sprite;
+    //    cellCode.IconEquiped.SetActive(petCode.IsEquiped);
+    //}
     private void InitCell(PetCell cellCode, PetInInventory petCode)
     {
+        if (petCode.PetData == null)
+        {
+            Debug.LogError("PetData is null. Cannot initialize cell.");
+            return;
+        }
         cellCode.Pet = petCode;
         cellCode.IconPet.sprite = petCode.PetData.Sprite;
         cellCode.IconEquiped.SetActive(petCode.IsEquiped);
     }
     private void UpdateUI(PetCell cellCode)
     {
+        if (!cellCode) return;
+
+        _currentCell.IconSelected.SetActive(false);
         cellCode.IconSelected.SetActive(true);
         _currentCell = cellCode;
         _currentPetImg.sprite = cellCode.Pet.PetData.Sprite;
@@ -67,17 +90,24 @@ public class PetsInventoryUI : MonoBehaviour
         if (cellCode.Pet.IsEquiped)
         {
             cellCode.IconEquiped.SetActive(true);
-            _buttonEquip.gameObject.SetActive(false);
+            _buttonEquip.SetActive(false);
+            _buttonUnequip.SetActive(true);
         }
         else
         {
             cellCode.IconEquiped.SetActive(false);
-            _buttonEquip.gameObject.SetActive(true);
+            _buttonEquip.SetActive(true);
+            _buttonUnequip.SetActive(false);
         }
     }
     public void Equip()
     {
         _invent.EquipPet(_currentCell.Pet.Id);
+        UpdateUI(_currentCell);
+    }
+    public void UnEquip()
+    {
+        _invent.UnEquip(_currentCell.Pet.Id);
         UpdateUI(_currentCell);
     }
     public void Remove()

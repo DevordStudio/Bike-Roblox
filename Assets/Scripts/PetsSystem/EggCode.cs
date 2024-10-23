@@ -1,4 +1,5 @@
 using DG.Tweening;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ public class EggCode : MonoBehaviour
             GetEgg();//помен€ть логику покупки €йца
         }
     }
+    [Button]
     public void GetEgg()
     {
         if (_bank.GetMoney() >= _eggPrice)

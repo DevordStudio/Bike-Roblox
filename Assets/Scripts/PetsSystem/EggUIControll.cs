@@ -11,11 +11,9 @@ public class EggUIControll : MonoBehaviour
     [SerializeField] private Image _eggImg;
     [SerializeField] private Image _petImg;
     [SerializeField] private GameObject _dropUI;
-    [SerializeField] private GameObject _repeatPanel;
+    //[SerializeField] private GameObject _repeatPanel;
     [SerializeField] private PanelAnim _eggAnim;
 
-    public Sprite EggTest;
-    public Sprite PetTest;
     //public void ToogleRepeatUI(bool active, int reward)
     //{
     //    _repeatPanel.SetActive(active);
@@ -25,10 +23,6 @@ public class EggUIControll : MonoBehaviour
     //        text.text = $"У вас уже есть этот питомец. Вы получите {reward} монет";
     //    }
     //}
-    public void Start()
-    {
-        EggAnim(EggTest, PetTest);
-    }
     public void EggAnim(Sprite eggSprite, Sprite petSprite)
     {
         _eggImg.sprite = eggSprite;
