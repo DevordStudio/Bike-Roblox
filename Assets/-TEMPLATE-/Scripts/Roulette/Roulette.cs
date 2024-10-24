@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -147,40 +148,33 @@ public class Roulette : MonoBehaviour
 [System.Serializable]
 public class ItemRoulette
 {
-    [SerializeField] private RewardType _type;
-    [SerializeField, ShowIf(nameof(IsItem))] private ShopItemData _item;
-    [SerializeField] private int _moneyReward;
+    [SerializeField] private EggCode _egg;
+    public int MoneyReward;
+    public RewardType Type;
     public Image ImageOnRoulette;
+    public TMP_Text Text;
     public Sprite Sprite;
     public string Name;
     [Range(1, 99)] public int Chance;
     // Это событие будет вызыватся при выпадении этого приза
     public UnityEvent ThisItemChoiceEvent;
-    private enum RewardType
+    public enum RewardType
     {
         None,
-        Item,
+        Egg,
         Money
-    }
-    private bool IsItem()
-    {
-        if(_type == RewardType.Item)
-            return true;
-        return false;
     }
     public void Drop(BankVolute bank)
     {
-        switch (_type)
+        switch (Type)
         {
             case RewardType.None:
                 return;
-            case RewardType.Item:
-                if (!_item.IsBought)
-                    _item.IsBought = true;
-                else bank.IncreaseMoney(_moneyReward);
+            case RewardType.Egg:
+                _egg.GetEgg();
                 break;
             case RewardType.Money:
-                bank.IncreaseMoney(_moneyReward);
+                bank.IncreaseMoney(MoneyReward);
                 break;
         }
     }

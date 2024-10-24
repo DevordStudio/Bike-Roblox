@@ -7,7 +7,7 @@ public class bike_sound : MonoBehaviour
 
     public bicycle_code linkToBike;// making a link to corresponding bike's script
 
-    private AudioSource skidSound;// makeing another audioSource for skidding sound
+    [SerializeField] private AudioSource skidSound;// makeing another audioSource for skidding sound
 
     // creating sounds(Link it to real sound files at editor)
     public AudioClip skid;
@@ -24,7 +24,7 @@ public class bike_sound : MonoBehaviour
         outsideControls = ctrlHub.GetComponent<controlHub>();//to connect c# mobile control script to this one
 
         //assign sound to audioSource
-        skidSound = gameObject.AddComponent<AudioSource>();
+        //skidSound = gameObject.AddComponent<AudioSource>();
         skidSound.loop = false;
         skidSound.playOnAwake = false;
         skidSound.clip = skid;

@@ -37,6 +37,9 @@ public class RoluetteUIController : MonoBehaviour
         UpdateTimeUI(_remainingTime, YandexGame.lang);
         foreach (var item in _roulette.Items)
         {
+            if (item.Type == ItemRoulette.RewardType.Money)
+                item.Text.text = item.MoneyReward.ToString();
+            else item.Text.text = null;
             item.ImageOnRoulette.sprite = item.Sprite;
         }
         if (_freeSpin)

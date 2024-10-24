@@ -1,7 +1,7 @@
 {
-    "idSave": 196,
+    "idSave": 277,
     "isFirstSession": false,
-    "language": "en",
+    "language": "ru",
     "promptDone": false,
     "money": 1,
     "newPlayerName": "Hello!",
@@ -16,6 +16,6 @@
     "SpeedBoostTimer": 0.0,
     "MoneyBoostTimer": 0.0,
     "TempKdRotateRoulette": 0.0,
-    "petInventoryData": "{\"pets\":[{\"petDataId\":784,\"IsEquiped\":false,\"Id\":1},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":2},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":3},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":4},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":5},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":6},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":7},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":8},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":9},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":10},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":11},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":12}],\"nextId\":13}",
+    "petInventoryData": "{\"pets\":[{\"petDataId\":784,\"IsEquiped\":false,\"Id\":1},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":2},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":3},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":4},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":5},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":6},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":7},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":8},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":9},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":10},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":11},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":12},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":13},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":14},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":15},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":16},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":17},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":18},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":19},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":20},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":21},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":22}],\"nextId\":23}",
     "MoneyRecord": 0
 }
