@@ -68,7 +68,7 @@ public class LocationsShopController : MonoBehaviour
     public void UpdateUI()
     {
         LocationData currentLocation = _locationController.Locations[_currentIndex];
-        UpdateName(YandexGame.EnvironmentData.language);
+        UpdateName(YandexGame.lang);
         if (currentLocation)
         {
             _locationImage.sprite = currentLocation.LocationInfo.Sprite;

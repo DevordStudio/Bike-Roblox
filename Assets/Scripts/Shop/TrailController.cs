@@ -28,6 +28,7 @@ public class TrailController : MonoBehaviour
     {
         GenerateCells();
         _trailRenderer.material = currentCell.TrailData.Material;
+        YandexGame.SwitchLangEvent += SwitchLanguage;
         UpdateUI();
     }
     public void UpdateUI()
@@ -45,14 +46,8 @@ public class TrailController : MonoBehaviour
                 _currentCellIcon.material = currentCell.TrailData.Material;
             }
             //_name.text = currentCell.TrailData.Name;
-            if (YandexGame.EnvironmentData.language == "ru")
-                _name.text = currentCell.TrailData.NameRus;
-            else if (YandexGame.EnvironmentData.language == "en")
-                _name.text = currentCell.TrailData.NameEn;
-            else if (YandexGame.EnvironmentData.language == "tr")
-                _name.text = currentCell.TrailData.NameTr;
-            else _name.text = currentCell.TrailData.NameEn;
             //SpeedBoost
+            SwitchLanguage(YandexGame.lang);
             if (!currentCell.TrailData.IsBought && !currentCell.TrailData.IsEquiped)//НЕ КУПЛЕН И НЕ ВЫБРАН
             {
                 _buttonBuy.SetActive(true);
@@ -78,6 +73,15 @@ public class TrailController : MonoBehaviour
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
         }//Отключить всё если currentCell нулевой
+    }
+    private void SwitchLanguage(string lang)
+    {
+        if (lang == "ru")
+            _name.text = currentCell.TrailData.NameRus;
+        else if (lang == "tr")
+            _name.text = currentCell.TrailData.NameTr;
+        else
+            _name.text = currentCell.TrailData.NameEn;
     }
     public void Buy()
     {

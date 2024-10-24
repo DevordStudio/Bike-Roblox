@@ -98,7 +98,7 @@ public class BikeShop : MonoBehaviour
         BikeData currentBike = _bikeController.Bikes[_currentIndex];
         currentBike.ChangeMaterials(_chasicsMR, _frontWheelMR, _backWheelMR);
         //_bikeName.text = currentBike.Name;
-        UpdateText(YandexGame.EnvironmentData.language);
+        UpdateText(YandexGame.lang);
         if (!currentBike.IsBought)//Если велосипед не куплен
         {
             _buttonBuy.SetActive(true);
