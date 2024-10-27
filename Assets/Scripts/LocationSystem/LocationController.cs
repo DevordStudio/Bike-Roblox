@@ -32,7 +32,12 @@ public class LocationController : MonoBehaviour
         foreach (var location in _locations)
         {
             location.Location.SetActive(location.LocationInfo.IsEquiped);
-            if(location.LocationInfo.IsEquiped) ActiveLocationId = location.LocationInfo.Id;
+            if (location.LocationInfo.IsEquiped)
+            {
+                ActiveLocationId = location.LocationInfo.Id;
+                if (location.LocationInfo.Skybox)
+                    RenderSettings.skybox = location.LocationInfo.Skybox;
+            }
         }
     }
     private void OnDestroy()

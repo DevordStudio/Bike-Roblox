@@ -1,5 +1,5 @@
 {
-    "idSave": 277,
+    "idSave": 4773,
     "isFirstSession": false,
     "language": "ru",
     "promptDone": false,
@@ -10,12 +10,141 @@
         true,
         false
     ],
-    "Money": 0,
+    "Money": 3653,
     "Is2XSpeed": false,
     "Is2XMoney": false,
     "SpeedBoostTimer": 0.0,
     "MoneyBoostTimer": 0.0,
     "TempKdRotateRoulette": 0.0,
-    "petInventoryData": "{\"pets\":[{\"petDataId\":784,\"IsEquiped\":false,\"Id\":1},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":2},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":3},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":4},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":5},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":6},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":7},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":8},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":9},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":10},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":11},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":12},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":13},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":14},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":15},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":16},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":17},{\"petDataId\":762,\"IsEquiped\":false,\"Id\":18},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":19},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":20},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":21},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":22}],\"nextId\":23}",
-    "MoneyRecord": 0
+    "petInventoryData": "{\"pets\":[{\"petDataId\":101,\"IsEquiped\":true,\"Id\":87},{\"petDataId\":538,\"IsEquiped\":true,\"Id\":96},{\"petDataId\":538,\"IsEquiped\":true,\"Id\":97},{\"petDataId\":191,\"IsEquiped\":false,\"Id\":98},{\"petDataId\":191,\"IsEquiped\":false,\"Id\":100},{\"petDataId\":729,\"IsEquiped\":false,\"Id\":101},{\"petDataId\":729,\"IsEquiped\":false,\"Id\":102},{\"petDataId\":538,\"IsEquiped\":false,\"Id\":103},{\"petDataId\":538,\"IsEquiped\":false,\"Id\":104},{\"petDataId\":538,\"IsEquiped\":false,\"Id\":105},{\"petDataId\":191,\"IsEquiped\":false,\"Id\":106},{\"petDataId\":191,\"IsEquiped\":false,\"Id\":107},{\"petDataId\":729,\"IsEquiped\":false,\"Id\":108},{\"petDataId\":729,\"IsEquiped\":false,\"Id\":109},{\"petDataId\":191,\"IsEquiped\":false,\"Id\":110},{\"petDataId\":191,\"IsEquiped\":false,\"Id\":111},{\"petDataId\":729,\"IsEquiped\":false,\"Id\":112},{\"petDataId\":191,\"IsEquiped\":false,\"Id\":113},{\"petDataId\":538,\"IsEquiped\":false,\"Id\":114}],\"nextId\":115}",
+    "shopItemsData": [
+        {
+            "Id": 2,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 1,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 3,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 4,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 1230,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 5,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 4514,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 496,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 627,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 629,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 0,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 715,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 551,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 105,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 7,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 6,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 8,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 10,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 13,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 9,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 12,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 11,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 34,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 234,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 535,
+            "IsBought": true,
+            "IsEquiped": false
+        }
+    ],
+    "MoneyRecord": 0,
+    "MusicVolume": 0.0,
+    "EffectVolume": 0.33080166578292849
 }

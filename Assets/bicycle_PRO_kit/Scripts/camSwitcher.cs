@@ -10,8 +10,8 @@ public class camSwitcher : MonoBehaviour
 	public Transform cameraTarget;
 	private Camera currentCamera;
 	//////////////////// for back Camera 
-	float dist = 3.0f;
-	float height = 1.0f;
+	[SerializeField] float dist = 3.0f;
+	[SerializeField] float height = 1.0f;
 	//////////////////// for around Camera
 	private float distance = 3.0f;
 	private float xSpeed = 10.0f;

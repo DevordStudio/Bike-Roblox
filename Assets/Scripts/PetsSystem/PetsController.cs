@@ -3,12 +3,9 @@ using UnityEngine;
 
 public class PetsController : MonoBehaviour
 {
-    [SerializeField] private GameObject _parentPets;
+    //[SerializeField] private GameObject _parentPets;
     [SerializeField] private PetInventory _invent;
-    [SerializeField] private Transform _targetToFollow;
-    [SerializeField] private float _lerpSpeed;
-    [SerializeField] private float _spawnRadius;
-    [SerializeField] private float _minDistanceFromOtherPets = 2f;
+    [SerializeField] private Transform[] _spawnPoints;
 
     private List<GameObject> _petGO = new List<GameObject>();
 
@@ -26,28 +23,6 @@ public class PetsController : MonoBehaviour
         _invent.OnPetEquipChanged -= Controll;
     }
 
-    //private void Update()
-    //{
-    //    if (_petGO.Count == 0) return;
-
-    //    for (int i = 0; i < _petGO.Count; i++)
-    //    {
-    //        if (Vector3.Distance(_petGO[i].transform.position, _targetToFollow.transform.position) > 0.7)
-    //        {
-    //            Vector3 targetPosition = _targetToFollow.transform.position;
-
-    //            if (i > 0)
-    //            {
-    //                Vector3 previousPetPosition = _petGO[i - 1].transform.position;
-    //                Vector3 direction = (previousPetPosition - targetPosition).normalized;
-    //                targetPosition = previousPetPosition + direction * _minDistanceFromOtherPets;
-    //            }
-
-    //            _petGO[i].transform.position = Vector3.Lerp(_petGO[i].transform.position, targetPosition, _lerpSpeed * Time.deltaTime);
-    //        }
-    //    }
-    //}
-
     private void Controll(PetInInventory pet, bool isEquiped)
     {
         if (isEquiped) EquipPet(pet);
@@ -58,8 +33,14 @@ public class PetsController : MonoBehaviour
     {
         if (pet == null) return;
 
-        Vector3 spawnPosition = CalculateSpawnPositionInRearHemisphere();
-        var petGO = Instantiate(pet.PetData.PetModel, spawnPosition, Quaternion.identity, _parentPets.transform);
+        Transform spawnPoint = FindAvailableSpawnPoint();
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning("Нет доступных точек для спавна питомца.");
+            return;
+        }
+
+        var petGO = Instantiate(pet.PetData.PetModel, spawnPoint.position, pet.PetData.PetModel.transform.rotation, spawnPoint.transform);
         petGO.name = pet.Id.ToString();
         _petGO.Add(petGO);
         Debug.Log($"Создана модель питомца с Id {pet.Id}");
@@ -75,13 +56,13 @@ public class PetsController : MonoBehaviour
         Debug.Log($"Удалена модель питомца с Id {pet.Id}");
     }
 
-    private Vector3 CalculateSpawnPositionInRearHemisphere()
+    private Transform FindAvailableSpawnPoint()
     {
-        float angle = Random.Range(90F, 270F);
-        float radians = angle * Mathf.Deg2Rad;
-
-        Vector3 offset = new Vector3(Mathf.Cos(radians), 0, Mathf.Sin(radians)) * _spawnRadius;
-
-        return _targetToFollow.position + offset;
+        foreach (var point in _spawnPoints)
+        {
+            if (!_petGO.Exists(pet => pet.transform.position == point.position))
+                return point;
+        }
+        return null;
     }
 }

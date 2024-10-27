@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 using YG;
 
 public class PetInventory : MonoBehaviour
@@ -17,14 +18,14 @@ public class PetInventory : MonoBehaviour
     private void Awake()
     {
         allPetsData = new List<PetsData>(Resources.LoadAll<PetsData>("ShopItems/Pets"));
-
+        LoadPetInventory();
     }
     void Start()
     {
         // Инициализируем allPetsData, например, загрузкой всех PetsData из ресурсов
         PetsData.OnPetDropped += AddPetToInventory;
         print(allPetsData.Count);
-        LoadPetInventory();
+        //LoadPetInventory();
     }
     private void OnDisable() => PetsData.OnPetDropped -= AddPetToInventory;
     // Функция для добавления нового питомца в инвентарь
@@ -50,8 +51,6 @@ public class PetInventory : MonoBehaviour
         OnPetAdded?.Invoke(newPet);
         SavePetInventory(); // Успешно добавлен питомец
     }
-
-
     // Функция для экипировки питомца
     public bool EquipPet(int petId)
     {
@@ -102,6 +101,7 @@ public class PetInventory : MonoBehaviour
             petInventory.Remove(removablePet);
             Debug.Log($"Pet with ID {petId} has been removed from inventory");
             OnInventoryChanged?.Invoke();
+            OnPetEquipChanged?.Invoke(removablePet, false);
             SavePetInventory();
             return true;
         }
@@ -144,7 +144,7 @@ public class PetInventory : MonoBehaviour
                         Id = petData.Id,
                         IsEquiped = petData.IsEquiped
                     };
-                    print("Пет дата - "+petData.IsEquiped);
+                    print("Пет дата - " + petData.IsEquiped);
                     pet.RestorePetData(allPetsData); // Восстанавливаем ссылку на PetsData
                     petInventory.Add(pet);
                 }

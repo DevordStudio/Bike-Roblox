@@ -1,5 +1,6 @@
 ﻿
 using DG.Tweening.Plugins.Options;
+using System.Collections.Generic;
 
 namespace YG
 {
@@ -27,7 +28,10 @@ namespace YG
         public float MoneyBoostTimer;
         public float TempKdRotateRoulette;
         public string petInventoryData;
+        public List<ShopItemSaveData> shopItemsData = new List<ShopItemSaveData>();
         public int MoneyRecord;
+        public float MusicVolume;
+        public float EffectVolume;
 
         // Поля (сохранения) можно удалять и создавать новые. При обновлении игры сохранения ломаться не должны
 
@@ -36,7 +40,8 @@ namespace YG
         public SavesYG()
         {
             // Допустим, задать значения по умолчанию для отдельных элементов массива
-
+            MusicVolume = 0.5F;
+            EffectVolume = 0.5F;
             openLevels[1] = true;
         }
     }

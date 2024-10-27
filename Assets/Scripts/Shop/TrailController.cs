@@ -23,6 +23,7 @@ public class TrailController : MonoBehaviour
     public TrailCell currentCell;
     /*[HideInInspector]*/
     public TrailCell lastCell;
+    public TrailCell lastSelected;
 
     private void Start()
     {
@@ -151,6 +152,8 @@ public class TrailController : MonoBehaviour
         {
             currentCell = cell;
             lastCell = cell;
+            lastSelected = cell;
+            lastSelected.IconSelected.SetActive(true);
         }
     }
 }

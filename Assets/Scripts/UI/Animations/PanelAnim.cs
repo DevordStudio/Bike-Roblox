@@ -1,6 +1,7 @@
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class PanelAnim : MonoBehaviour
@@ -31,7 +32,7 @@ public class PanelAnim : MonoBehaviour
         if (_animationType == PanelAnimType.None) return true;
         else return false;
     }
-
+    [Button]
     public void PlayAnimEnable()
     {
         //if(_rectTransform.gameObject.activeSelf) return;
@@ -49,6 +50,7 @@ public class PanelAnim : MonoBehaviour
                 break;
         }
     }
+    [Button]
     public void PlayAnimDisable()
     {
         switch (_animationType)
@@ -105,6 +107,7 @@ public class PanelAnim : MonoBehaviour
         sequence.AppendCallback(() =>
         {
             _rectTransform.gameObject.SetActive(false);
+            EventSystem.current.SetSelectedGameObject(null);
         });
         sequence.Play();
     }
@@ -150,6 +153,7 @@ public class PanelAnim : MonoBehaviour
         sequence.AppendCallback(() =>
         {
             _rectTransform.gameObject.SetActive(false);
+            EventSystem.current.SetSelectedGameObject(null);
         });
         sequence.Play();
     }

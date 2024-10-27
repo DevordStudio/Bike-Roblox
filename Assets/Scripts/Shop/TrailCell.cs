@@ -5,6 +5,7 @@ public class TrailCell : MonoBehaviour
 {
     public Image Icon;
     public GameObject IconEquiped;
+    public GameObject IconSelected;
     [HideInInspector] public TrailData TrailData;
     [HideInInspector] public TrailController TrailController;
     public Button ButtonChoose;
@@ -19,6 +20,9 @@ public class TrailCell : MonoBehaviour
     {
         //TrailController.lastCell = TrailController.currentCell;
         TrailController.currentCell = this;
+        IconSelected.SetActive(true);
+        TrailController.lastSelected.IconSelected.SetActive(false);
+        TrailController.lastSelected = this;
         TrailController.UpdateUI();
     }
     public void UpdateCell()
