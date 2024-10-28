@@ -1,5 +1,5 @@
 {
-    "idSave": 217,
+    "idSave": 235,
     "isFirstSession": false,
     "language": "tr",
     "promptDone": false,
@@ -15,5 +15,6 @@
     "Is2XMoney": false,
     "SpeedBoostTimer": 0.0,
     "MoneyBoostTimer": 0.0,
-    "TempKdRotateRoulette": 0.0
+    "TempKdRotateRoulette": 0.0,
+    "petInventoryData": ""
 }
