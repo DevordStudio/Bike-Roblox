@@ -34,10 +34,15 @@ public class RoluetteUIController : MonoBehaviour
             StartCoroutine(CheckFreeSpinCoroutine());
         else
             UnlockFreeSpin();
-        UpdateTimeUI(_remainingTime);
+        UpdateTimeUI(_remainingTime, YandexGame.lang);
         foreach (var item in _roulette.Items)
         {
+            if (item.Type == ItemRoulette.RewardType.Money)
+                item.Text.text = item.MoneyReward.ToString();
+            else item.Text.text = null;
             item.ImageOnRoulette.sprite = item.Sprite;
+            if (item.Type == ItemRoulette.RewardType.Egg)
+                item.ImageOnRoulette.color = item.Egg.GetColor();
         }
         if (_freeSpin)
         {
@@ -49,15 +54,16 @@ public class RoluetteUIController : MonoBehaviour
             _timerGO.SetActive(true);
             _freeSpinMarker.SetActive(false);
         }
+        YandexGame.SwitchLangEvent += InvokeTimeUpdate;
     }
-
+    private void InvokeTimeUpdate(string lang) => UpdateTimeUI(_remainingTime, lang);
     private IEnumerator CheckFreeSpinCoroutine()
     {
         while (_remainingTime > 0)
         {
             yield return new WaitForSeconds(1f);
             _remainingTime -= 1f;
-            UpdateTimeUI(_remainingTime);
+            UpdateTimeUI(_remainingTime, YandexGame.lang);
         }
         UnlockFreeSpin();
         SaveProgress();
@@ -95,14 +101,14 @@ public class RoluetteUIController : MonoBehaviour
 
     private void EndRotate() => _closeButton.interactable = true;
 
-    private void UpdateTimeUI(float time)
+    private void UpdateTimeUI(float time, string lang)
     {
         _timerText.text = FormatTime(time);
-        if (YandexGame.EnvironmentData.language == "ru")
+        if (lang == "ru")
             _timerInPanelText.text = time > 0 ? _prefixTimerInPanelRu + " " + FormatTime(time) : "Доступна бесплатная крутка";
-        else if (YandexGame.EnvironmentData.language == "tr")
+        else if (lang == "tr")
             _timerInPanelText.text = time > 0 ? _prefixTimerInPanelTr + " " + FormatTime(time) : _trText;
-        else 
+        else
             _timerInPanelText.text = time > 0 ? _prefixTimerInPanelEn + " " + FormatTime(time) : "Free spin unlocked";
     }
 

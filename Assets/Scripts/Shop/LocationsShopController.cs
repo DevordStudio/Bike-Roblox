@@ -15,6 +15,7 @@ public class LocationsShopController : MonoBehaviour
     [SerializeField] private GameObject _buttonPlay;
     [SerializeField] private GameObject _buttonThisLocation;
     [SerializeField] private BankVolute _bank;
+    [SerializeField] private TMP_Text _priceText;
     private int _currentIndex = 0;
 
     private void Start()
@@ -68,7 +69,7 @@ public class LocationsShopController : MonoBehaviour
     public void UpdateUI()
     {
         LocationData currentLocation = _locationController.Locations[_currentIndex];
-        UpdateName(YandexGame.EnvironmentData.language);
+        UpdateName(YandexGame.lang);
         if (currentLocation)
         {
             _locationImage.sprite = currentLocation.LocationInfo.Sprite;
@@ -78,18 +79,28 @@ public class LocationsShopController : MonoBehaviour
                 _buttonBuy.SetActive(true);
                 _buttonPlay.SetActive(false);
                 _buttonThisLocation.SetActive(false);
+                if (_priceText && !currentLocation.LocationInfo.IsDonate)
+                {
+                    _priceText.gameObject.SetActive(true);
+                    _priceText.text = currentLocation.LocationInfo.Price.ToString();
+                    if (_bank.GetMoney() >= currentLocation.LocationInfo.Price) _priceText.color = Color.white;
+                    else _priceText.color = Color.red;
+                }
+                else _priceText.gameObject.SetActive(false);
             }
             else if (currentLocation.LocationInfo.IsBought && !currentLocation.LocationInfo.IsEquiped)// Если куплена и не является текущей
             {
                 _buttonBuy.SetActive(false);
                 _buttonPlay.SetActive(true);
                 _buttonThisLocation.SetActive(false);
+                _priceText.gameObject.SetActive(false);
             }
             else if (currentLocation.LocationInfo.IsBought && currentLocation.LocationInfo.IsEquiped)
             {
                 _buttonBuy.SetActive(false);
                 _buttonPlay.SetActive(false);
                 _buttonThisLocation.SetActive(true);
+                _priceText.gameObject.SetActive(false);
             }
         }
     }

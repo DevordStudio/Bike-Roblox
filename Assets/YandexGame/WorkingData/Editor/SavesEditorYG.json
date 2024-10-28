@@ -1,7 +1,7 @@
 {
-    "idSave": 235,
+    "idSave": 5105,
     "isFirstSession": false,
-    "language": "tr",
+    "language": "ru",
     "promptDone": false,
     "money": 1,
     "newPlayerName": "Hello!",
@@ -10,11 +10,151 @@
         true,
         false
     ],
-    "Money": 0,
+    "Money": 3653,
     "Is2XSpeed": false,
     "Is2XMoney": false,
     "SpeedBoostTimer": 0.0,
     "MoneyBoostTimer": 0.0,
     "TempKdRotateRoulette": 0.0,
-    "petInventoryData": ""
+    "petInventoryData": "{\"pets\":[{\"petDataId\":538,\"IsEquiped\":false,\"Id\":149},{\"petDataId\":836,\"IsEquiped\":true,\"Id\":151},{\"petDataId\":538,\"IsEquiped\":true,\"Id\":152},{\"petDataId\":538,\"IsEquiped\":false,\"Id\":174},{\"petDataId\":327,\"IsEquiped\":false,\"Id\":177},{\"petDataId\":836,\"IsEquiped\":true,\"Id\":178},{\"petDataId\":538,\"IsEquiped\":false,\"Id\":180},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":195},{\"petDataId\":638,\"IsEquiped\":false,\"Id\":196},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":197},{\"petDataId\":973,\"IsEquiped\":false,\"Id\":198},{\"petDataId\":624,\"IsEquiped\":false,\"Id\":199},{\"petDataId\":836,\"IsEquiped\":false,\"Id\":200},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":201},{\"petDataId\":784,\"IsEquiped\":false,\"Id\":202},{\"petDataId\":973,\"IsEquiped\":false,\"Id\":203},{\"petDataId\":836,\"IsEquiped\":false,\"Id\":204},{\"petDataId\":101,\"IsEquiped\":false,\"Id\":205}],\"nextId\":206}",
+    "shopItemsData": [
+        {
+            "Id": 2,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 1,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 3,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 4,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 1230,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 5,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 4514,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 496,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 627,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 629,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 0,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 715,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 551,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 105,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 7,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 6,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 8,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 10,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 13,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 9,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 12,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 11,
+            "IsBought": false,
+            "IsEquiped": false
+        },
+        {
+            "Id": 34,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 234,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 535,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 3492,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 89,
+            "IsBought": true,
+            "IsEquiped": false
+        }
+    ],
+    "MoneyRecord": 0,
+    "MusicVolume": 0.0,
+    "EffectVolume": 0.0
 }

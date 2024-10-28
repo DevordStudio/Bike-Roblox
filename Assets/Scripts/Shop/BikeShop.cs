@@ -21,6 +21,7 @@ public class BikeShop : MonoBehaviour
     [SerializeField] private ParticleSystem _particleSwitch;
     [SerializeField] private AudioClip _switchClip;
     [SerializeField] private AudioSource _effectSource;
+    [SerializeField] private TMP_Text _priceText;
 
     private int _currentIndex;
 
@@ -97,25 +98,36 @@ public class BikeShop : MonoBehaviour
     {
         BikeData currentBike = _bikeController.Bikes[_currentIndex];
         currentBike.ChangeMaterials(_chasicsMR, _frontWheelMR, _backWheelMR);
+        
         //_bikeName.text = currentBike.Name;
-        UpdateText(YandexGame.EnvironmentData.language);
+        UpdateText(YandexGame.lang);
         if (!currentBike.IsBought)//Если велосипед не куплен
         {
             _buttonBuy.SetActive(true);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
+            if (_priceText && !currentBike.IsDonate)
+            {
+                _priceText.gameObject.SetActive(true);
+                _priceText.text = currentBike.Price.ToString();
+                if (_bank.GetMoney() >= currentBike.Price) _priceText.color = Color.white;
+                else _priceText.color = Color.red;
+            }
+            else _priceText.gameObject.SetActive(false);
         }
         else if (currentBike.IsBought && !currentBike.IsEquiped)//Если куплен, но не выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(true);
             _buttonEquiped.SetActive(false);
+            _priceText.gameObject.SetActive(false);
         }
         else if (currentBike.IsBought && currentBike.IsEquiped)//Если куплен и выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(true);
+            _priceText.gameObject.SetActive(false);
         }
     }
     public void Buy()

@@ -5,6 +5,7 @@ using UnityEngine;
 public class LocationInfo : ShopItemData
 {
     public Sprite Sprite;
+    public Material Skybox;
 
     public static event Action<int> OnLocationChanged;
     

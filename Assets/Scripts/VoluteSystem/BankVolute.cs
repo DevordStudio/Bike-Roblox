@@ -21,8 +21,14 @@ public class BankVolute : ScriptableObject
     }
     public void DecreaseMoney(int amount)
     {
-        if(_money > amount)
+        if(_money >= amount)
             _money -= amount;
+        OnMoneyValueChanged?.Invoke();
+    }
+    public void SetVolute(int amount)
+    {
+        if (amount < 0) return;
+        _money = amount;
         OnMoneyValueChanged?.Invoke();
     }
     public int GetMoney() => _money;

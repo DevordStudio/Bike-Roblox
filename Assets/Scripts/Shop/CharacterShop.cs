@@ -19,6 +19,7 @@ public class CharacterShop : MonoBehaviour
     [SerializeField] private ParticleSystem _switchPS;
     [SerializeField] private AudioClip _switchClip;
     [SerializeField] private AudioSource _effectSource;
+    [SerializeField] private TMP_Text _priceText;
 
     private List<GameObject> _models = new List<GameObject>();
     private int _currentIndex;
@@ -106,24 +107,34 @@ public class CharacterShop : MonoBehaviour
             model.SetActive(character.Info.Id.ToString() == model.name);
         }
         //_nameText.text = character.Info.Name;
-        UpdateText(YandexGame.EnvironmentData.language);
+        UpdateText(YandexGame.lang);
         if (!character.Info.IsBought) //Если персонаж не куплен
         {
             _buttonBuy.SetActive(true);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
+            if (_priceText && !character.Info.IsDonate)
+            {
+                _priceText.gameObject.SetActive(true);
+                _priceText.text = character.Info.Price.ToString();
+                if (_bank.GetMoney() >= character.Info.Price) _priceText.color = Color.white;
+                else _priceText.color = Color.red;
+            }
+            else _priceText.gameObject.SetActive(false);
         }
         else if (character.Info.IsBought && !character.Info.IsEquiped)//Если куплен и не выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(true);
             _buttonEquiped.SetActive(false);
+            _priceText.gameObject.SetActive(false);
         }
         else if (character.Info.IsBought && character.Info.IsEquiped)// Если выбран
         {
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(true);
+            _priceText.gameObject.SetActive(false);
         }
     }
     public void Buy()

@@ -1,7 +1,9 @@
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
+[System.Serializable]
 public class PanelAnim : MonoBehaviour
 {
     [SerializeField] private PanelAnimType _animationType;
@@ -30,7 +32,7 @@ public class PanelAnim : MonoBehaviour
         if (_animationType == PanelAnimType.None) return true;
         else return false;
     }
-
+    [Button]
     public void PlayAnimEnable()
     {
         //if(_rectTransform.gameObject.activeSelf) return;
@@ -48,6 +50,7 @@ public class PanelAnim : MonoBehaviour
                 break;
         }
     }
+    [Button]
     public void PlayAnimDisable()
     {
         switch (_animationType)
@@ -70,7 +73,7 @@ public class PanelAnim : MonoBehaviour
             Debug.LogError("Массив точек пустой!");
             return;
         }
-        _rectTransform.position = _animPoints[0].position;
+        _rectTransform.localPosition = _animPoints[0].localPosition;
         _rectTransform.gameObject.SetActive(true);
 
         float timePerPoint = _totalDuration / _animPoints.Length;
@@ -79,7 +82,7 @@ public class PanelAnim : MonoBehaviour
 
         foreach (RectTransform point in _animPoints)
         {
-            sequence.Append(_rectTransform.DOMove(point.position, timePerPoint));
+            sequence.Append(_rectTransform.DOLocalMove(point.localPosition, timePerPoint));
         }
         sequence.Play();
     }
@@ -91,7 +94,7 @@ public class PanelAnim : MonoBehaviour
             return;
         }
 
-        _rectTransform.position = _animPoints[_animPoints.Length - 1].position;
+        _rectTransform.localPosition = _animPoints[_animPoints.Length - 1].localPosition;
 
         float timePerPoint = _totalDuration / _animPoints.Length;
 
@@ -99,11 +102,12 @@ public class PanelAnim : MonoBehaviour
 
         for (int i = _animPoints.Length - 1; i >= 0; i--)
         {
-            sequence.Append(_rectTransform.DOMove(_animPoints[i].position, timePerPoint));
+            sequence.Append(_rectTransform.DOLocalMove(_animPoints[i].localPosition, timePerPoint));
         }
         sequence.AppendCallback(() =>
         {
             _rectTransform.gameObject.SetActive(false);
+            EventSystem.current.SetSelectedGameObject(null);
         });
         sequence.Play();
     }
@@ -149,6 +153,7 @@ public class PanelAnim : MonoBehaviour
         sequence.AppendCallback(() =>
         {
             _rectTransform.gameObject.SetActive(false);
+            EventSystem.current.SetSelectedGameObject(null);
         });
         sequence.Play();
     }

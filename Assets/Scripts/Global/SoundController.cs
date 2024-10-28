@@ -1,20 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class SoundController : MonoBehaviour
 {
     [SerializeField] private AudioSource[] _musicSources;
     [SerializeField] private AudioSource[] _effectSources;
+    [SerializeField] private Slider _musicSlider;
+    [SerializeField] private Slider _effectSlider;
     [SerializeField] private AudioClip _buyClip;
     [SerializeField] private AudioClip _equipClip;
     [SerializeField] private AudioClip _moneyIncreaseSound;
     [SerializeField] private AudioClip _clickSound;
     [SerializeField] private AudioClip _boostSound;
+
     private void Start()
     {
         ShopItemData.OnItemBought += PlayBuySound;
         ShopItemData.OnItemEquiped += PlayEquipSound;
         BankVolute.OnMoneyIncrease += PlayMoneyIncreaseSound;
+        _musicSlider.value = YandexGame.savesData.MusicVolume * _musicSlider.maxValue;
+        _effectSlider.value = YandexGame.savesData.EffectVolume * _effectSlider.maxValue;
+        MusicVolume(_musicSlider);
+        EffectVolume(_effectSlider);
     }
     private void OnDestroy()
     {
@@ -27,6 +35,7 @@ public class SoundController : MonoBehaviour
         foreach (var source in _musicSources)
         {
             source.volume = volumeSlider.value / volumeSlider.maxValue;
+            YandexGame.savesData.MusicVolume = volumeSlider.value / volumeSlider.maxValue;
         }
     }
     public void EffectVolume(Slider volumeSlider)
@@ -34,6 +43,7 @@ public class SoundController : MonoBehaviour
         foreach (var source in _effectSources)
         {
             source.volume = volumeSlider.value / volumeSlider.maxValue;
+            YandexGame.savesData.EffectVolume = volumeSlider.value / volumeSlider.maxValue;
         }
     }
     public void PlayBuySound()

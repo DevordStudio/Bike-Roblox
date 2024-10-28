@@ -1,23 +1,31 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 using YG;
 
-public class PetInventory : ScriptableObject
+public class PetInventory : MonoBehaviour
 {
-    private List<PetInInventory> petInventory = new List<PetInInventory>();
+    [SerializeField] private List<PetInInventory> petInventory = new List<PetInInventory>();
     private List<PetsData> allPetsData; // Список всех доступных PetsData
 
-    public int MaxPetsInInventory { get; private set; } // Максимальное число питомцев в инвентаре
-    public int MaxEquippedPets { get; private set; } // Максимальное число экипированных питомцев
+    public int MaxPetsInInventory; // Максимальное число питомцев в инвентаре
+    public int MaxEquippedPets; // Максимальное число экипированных питомцев
 
     public event Action OnInventoryChanged;
-
+    public event Action<PetInInventory> OnPetAdded;
+    public event Action<PetInInventory, bool> OnPetEquipChanged;
+    private void Awake()
+    {
+        allPetsData = new List<PetsData>(Resources.LoadAll<PetsData>("ShopItems/Pets"));
+        LoadPetInventory();
+    }
     void Start()
     {
         // Инициализируем allPetsData, например, загрузкой всех PetsData из ресурсов
-        allPetsData = new List<PetsData>(Resources.LoadAll<PetsData>("ShopItems/Pets"));
         PetsData.OnPetDropped += AddPetToInventory;
+        print(allPetsData.Count);
+        //LoadPetInventory();
     }
     private void OnDisable() => PetsData.OnPetDropped -= AddPetToInventory;
     // Функция для добавления нового питомца в инвентарь
@@ -26,13 +34,13 @@ public class PetInventory : ScriptableObject
         if (petData == null)
         {
             Debug.LogError("PetData is null. Cannot add pet to inventory.");
-            //return false;
+            return;
         }
 
         if (petInventory.Count >= MaxPetsInInventory)
         {
             Debug.LogWarning("Cannot add pet: inventory is full.");
-            //return false; // Не удалось добавить питомца, если инвентарь полон
+            return; // Не удалось добавить питомца, если инвентарь полон
         }
 
         // Создаем новый объект PetInInventory
@@ -40,10 +48,9 @@ public class PetInventory : ScriptableObject
         petInventory.Add(newPet);
         Debug.Log($"Added new pet to inventory: {petData.name}");
         OnInventoryChanged?.Invoke();
-        //return true; // Успешно добавлен питомец
+        OnPetAdded?.Invoke(newPet);
+        SavePetInventory(); // Успешно добавлен питомец
     }
-
-
     // Функция для экипировки питомца
     public bool EquipPet(int petId)
     {
@@ -52,7 +59,7 @@ public class PetInventory : ScriptableObject
 
         if (equippedCount >= MaxEquippedPets)
         {
-            Debug.LogWarning("Cannot equip pet: maximum equipped pets limit reached.");
+            Debug.Log("Cannot equip pet: maximum equipped pets limit reached.");
             return false; // Не удалось экипировать питомца, если превышен лимит
         }
 
@@ -62,10 +69,29 @@ public class PetInventory : ScriptableObject
             petToEquip.IsEquiped = true;
             Debug.Log($"Equipped pet: {petToEquip.PetData.name}");
             OnInventoryChanged?.Invoke();
+            OnPetEquipChanged?.Invoke(petToEquip, petToEquip.IsEquiped);
+            SavePetInventory();
             return true; // Успешно экипирован питомец
         }
         Debug.LogError($"Pet with ID {petId} not found in inventory.");
         return false; // Не удалось экипировать питомца, если питомец не найден
+    }
+    public bool UnEquip(int petId)
+    {
+        PetInInventory petToUnequip = petInventory.Find(p => p.Id == petId);
+        if (!petToUnequip.IsEquiped)
+            return false;
+        if (petToUnequip != null)
+        {
+            petToUnequip.IsEquiped = false;
+            OnInventoryChanged?.Invoke();
+            OnPetEquipChanged?.Invoke(petToUnequip, petToUnequip.IsEquiped);
+            Debug.Log($"Unequipped pet: {petToUnequip.PetData.name}");
+            SavePetInventory();
+            return true;
+        }
+        Debug.LogError($"Pet with ID {petId} not found in inventory.");
+        return false;
     }
     public bool DeletePet(int petId)
     {
@@ -75,6 +101,8 @@ public class PetInventory : ScriptableObject
             petInventory.Remove(removablePet);
             Debug.Log($"Pet with ID {petId} has been removed from inventory");
             OnInventoryChanged?.Invoke();
+            OnPetEquipChanged?.Invoke(removablePet, false);
+            SavePetInventory();
             return true;
         }
         else
@@ -85,36 +113,56 @@ public class PetInventory : ScriptableObject
     }
     public void SavePetInventory()
     {
-        // Преобразуем список в JSON
-        string jsonData = JsonUtility.ToJson(new InventoryData { pets = petInventory.ToArray() });
+        // Преобразуем список в JSON, включая nextId
+        string jsonData = JsonUtility.ToJson(new InventoryData { pets = petInventory.ToArray(), nextId = PetInInventory.nextId });
         YandexGame.savesData.petInventoryData = jsonData;
         YandexGame.SaveProgress();
-
-        Debug.Log("Pet inventory saved: " + jsonData);
+        print("Данные сохранены");
+        Debug.Log($"Pet inventory saved: {jsonData}");
     }
 
     public void LoadPetInventory()
     {
-        // Загружаем данные
         string jsonData = YandexGame.savesData.petInventoryData;
 
         if (!string.IsNullOrEmpty(jsonData))
         {
             // Десериализуем данные
             InventoryData loadedData = JsonUtility.FromJson<InventoryData>(jsonData);
-            petInventory = new List<PetInInventory>(loadedData.pets);
+            petInventory = new List<PetInInventory>();
 
-            // Восстанавливаем PetData для каждого объекта
-            foreach (var pet in petInventory)
+            // Создаем объекты PetInInventory из загруженных данных
+            foreach (var petData in loadedData.pets)
             {
-                pet.RestorePetData(allPetsData);
+                // Находим соответствующий PetsData по petDataId
+                PetsData petDataReference = allPetsData.Find(pet => pet.Id == petData.petDataId);
+                if (petDataReference != null)
+                {
+                    // Создаем новый объект PetInInventory с найденным PetsData
+                    PetInInventory pet = new PetInInventory(petDataReference)
+                    {
+                        Id = petData.Id,
+                        IsEquiped = petData.IsEquiped
+                    };
+                    print("Пет дата - " + petData.IsEquiped);
+                    pet.RestorePetData(allPetsData); // Восстанавливаем ссылку на PetsData
+                    petInventory.Add(pet);
+                }
+                else
+                {
+                    Debug.LogWarning($"PetsData с ID {petData.petDataId} не найдено.");
+                }
             }
 
-            Debug.Log("Pet inventory loaded.");
+            // Устанавливаем nextId из загруженных данных
+            PetInInventory.nextId = loadedData.nextId > 0 ? loadedData.nextId : petInventory.Count + 1;
+            Debug.Log(PetInInventory.nextId);
         }
         else
         {
-            Debug.Log("No saved pet inventory data found.");
+            // Если данных нет, устанавливаем nextId на 1
+            PetInInventory.nextId = 1;
+            Debug.Log("nextId не найден");
         }
     }
     public List<PetInInventory> GetPets() => petInventory;
@@ -126,26 +174,31 @@ public class PetInventory : ScriptableObject
     public class InventoryData
     {
         public PetInInventory[] pets; // Массив питомцев для сериализации
+        public int nextId; // Текущее значение nextId для корректной загрузки
     }
 }
 [System.Serializable]
 public class PetInInventory
 {
     public int petDataId; // Id PetsData для сериализации
-    public bool IsEquiped;
+    public bool IsEquiped; // Поле должно быть сериализуемым
     public int Id; // Уникальный идентификатор
 
     [NonSerialized]
     public PetsData PetData; // Ссылка на ScriptableObject
 
-    private static int nextId = 1;
+    public static int nextId;
 
     public PetInInventory(PetsData petData)
     {
         PetData = petData;
         petDataId = petData.Id; // Сохраняем Id PetsData
+
+        // Устанавливаем уникальный Id
         Id = nextId;
         nextId++;
+
+        Debug.Log($"Создан новый PetInInventory с Id: {Id}, nextId теперь: {nextId}");
     }
 
     // Метод для восстановления ссылки на PetsData после десериализации

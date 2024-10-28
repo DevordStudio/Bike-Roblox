@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="PetData",menuName ="PetData")]
 public class PetsData : ShopItemData
 {
-    [SerializeField] private GameObject _petModel;
+    public GameObject PetModel;
 
     public Sprite Sprite;
     public int Reward;
