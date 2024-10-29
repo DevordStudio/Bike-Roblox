@@ -41,6 +41,8 @@ public class RoluetteUIController : MonoBehaviour
                 item.Text.text = item.MoneyReward.ToString();
             else item.Text.text = null;
             item.ImageOnRoulette.sprite = item.Sprite;
+            if (item.Type == ItemRoulette.RewardType.Egg)
+                item.ImageOnRoulette.color = item.Egg.GetColor();
         }
         if (_freeSpin)
         {

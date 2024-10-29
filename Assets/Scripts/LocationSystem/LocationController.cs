@@ -31,7 +31,7 @@ public class LocationController : MonoBehaviour
         LocationInfo.OnLocationChanged += LoadLocation;
         foreach (var location in _locations)
         {
-            location.Location.SetActive(location.LocationInfo.IsEquiped);
+            //location.Location.SetActive(location.LocationInfo.IsEquiped);
             if (location.LocationInfo.IsEquiped)
             {
                 ActiveLocationId = location.LocationInfo.Id;

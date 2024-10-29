@@ -110,6 +110,7 @@ public class bicycle_code : MonoBehaviour
     [SerializeField] private AudioSource _speedSource;
     [SerializeField] private float _soundSpeed = 35;
     private bool _soundIsOn;
+    public float effectVolume;
 
     [HideInInspector]
     public float bikeSpeed; //to know bike speed km/h
@@ -118,6 +119,11 @@ public class bicycle_code : MonoBehaviour
     public void ChangeCharacter(GameObject character)
     {
         _activeAnim = character.GetComponent<Animator>();
+    }
+    public void SetEffectVolume()
+    {
+        effectVolume = _speedSource.volume;
+        //_soundIsOn = false;
     }
     ////////////////////////////////////////////////  ON SCREEN INFO ///////////////////////////////////////////////////////
     //void OnGUI()
@@ -169,6 +175,7 @@ public class bicycle_code : MonoBehaviour
     //}
     void Start()
     {
+        SetEffectVolume();
         //CharacterController.OnCharacterChanged += ChangeCharacter;
         SpeedBoost.OnConditionChanged += BoostedEffect;
         //if there is no pendulum linked to script in Editor, it means MTB have no rear suspension, so no movement of rear wheel(pendulum)
@@ -662,11 +669,14 @@ public class bicycle_code : MonoBehaviour
             {
                 _speedSource.Play();
                 _soundIsOn = true;
+                //effectVolume = _speedSource.volume; // Текущее значение громкости
+                _speedSource.volume = 0; // Начинаем с нуля и плавно увеличиваем
             }
 
-            if (_speedSource.volume < 1)
-                _speedSource.volume = Mathf.Lerp(_speedSource.volume, 1, _lerpSpeed * Time.deltaTime);
+            // Плавно увеличиваем громкость до нужного уровня с учетом текущего значения
+            _speedSource.volume = Mathf.Lerp(_speedSource.volume, effectVolume, _lerpSpeed * Time.deltaTime);
 
+            // Настройка угла обзора камеры
             _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _targetFOV, _lerpSpeed * Time.deltaTime);
             _speedParticles.SetActive(true);
         }
@@ -674,8 +684,8 @@ public class bicycle_code : MonoBehaviour
         {
             if (_soundIsOn)
             {
-                if (_speedSource.volume > 0)
-                    _speedSource.volume = Mathf.Lerp(_speedSource.volume, 0, _lerpSpeed * Time.deltaTime);
+                // Плавное уменьшение громкости до нуля
+                _speedSource.volume = Mathf.Lerp(_speedSource.volume, 0, _lerpSpeed * Time.deltaTime);
 
                 if (_speedSource.volume < 0.01f)
                 {
@@ -684,6 +694,7 @@ public class bicycle_code : MonoBehaviour
                 }
             }
 
+            //effectVolume = 0;
             _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _defFOV, _lerpSpeed * Time.deltaTime);
             _speedParticles.SetActive(false);
         }

@@ -2,6 +2,7 @@ using DG.Tweening;
 using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EggUIControll : MonoBehaviour
@@ -19,12 +20,13 @@ public class EggUIControll : MonoBehaviour
     [SerializeField, Foldout("EggDropAnim")] private Image _petImg;
     [SerializeField, Foldout("EggDropAnim")] private GameObject _dropUI;
     [SerializeField, Foldout("EggDropAnim")] private PanelAnim _eggAnim;
+    [SerializeField, Foldout("EggDropAnim")] private GameObject _glow;
     [SerializeField, Foldout("EggUI")] private PanelAnim _uiEggAnim;
     [SerializeField, Foldout("EggUI")] private Image _petImgPrefab;
     [SerializeField, Foldout("EggUI")] private GameObject _petImgParent;
     [SerializeField, Foldout("EggUI")] private Image _eggImgUI;
     [SerializeField, Foldout("EggUI")] private Button _buttonGetEgg;
-    [SerializeField, Foldout("EggUI")] private GameObject _panelNotice; 
+    [SerializeField, Foldout("EggUI")] private GameObject _panelNotice;
     [SerializeField, Foldout("EggUI")] private TMP_Text _eggPrice;
     [SerializeField, Foldout("EggUI")] private Color _colorNotEnoughMoney = Color.red;
     [SerializeField, Foldout("EggUI")] private Color _colorEnoughMoney = Color.white;
@@ -52,7 +54,7 @@ public class EggUIControll : MonoBehaviour
             if (pet.gameObject != _petImgParent) Destroy(pet.gameObject);
         }
         var pets = egg.GetPets();
-        foreach ( var pet in pets )
+        foreach (var pet in pets)
         {
             var petImgGO = Instantiate(_petImgPrefab, _petImgParent.transform);
             petImgGO.sprite = pet.Sprite;
@@ -62,7 +64,7 @@ public class EggUIControll : MonoBehaviour
     }
     private void UpdateUI()
     {
-        if(_invent.GetPets().Count >= _invent.MaxPetsInInventory)
+        if (_invent.GetPets().Count >= _invent.MaxPetsInInventory)
         {
             _buttonGetEgg.gameObject.SetActive(false);
             _panelNotice.gameObject.SetActive(true);
@@ -71,26 +73,29 @@ public class EggUIControll : MonoBehaviour
         {
             _buttonGetEgg.gameObject.SetActive(true);
             _panelNotice.gameObject.SetActive(false);
-        }
-        if (_currentEgg)
-        {
-            if(_bank.GetMoney() >= _currentEgg.GetPrice())
+            if (_currentEgg)
             {
-                _buttonGetEgg.gameObject.SetActive(true);
-                _eggPrice.color = _colorEnoughMoney;
-            }
-            else
-            {
-                _buttonGetEgg.gameObject.SetActive(false);
-                _eggPrice.color = _colorNotEnoughMoney;
+                if (_bank.GetMoney() >= _currentEgg.GetPrice())
+                {
+                    _buttonGetEgg.gameObject.SetActive(true);
+                    _eggPrice.color = _colorEnoughMoney;
+                }
+                else
+                {
+                    _buttonGetEgg.gameObject.SetActive(false);
+                    _eggPrice.color = _colorNotEnoughMoney;
+                }
             }
         }
+
     }
     public void EggAnim(Color eggColor, Sprite petSprite)
     {
         _eggImg.color = eggColor;
         _petImg.sprite = petSprite;
         _petImg.gameObject.SetActive(false);
+        _glow.SetActive(false);
+        _dropUI.GetComponent<EventTrigger>().enabled = false;
         OpenEggAnim();
     }
     private void OpenEggAnim()
@@ -99,9 +104,9 @@ public class EggUIControll : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() => _eggAnim.PlayAnimEnable());
         sequence.AppendCallback(() => ShakeAndDisable());
-        //sequence.AppendCallback(() => _petImg.gameObject.SetActive(true));
         sequence.Play();
         _dropUI.SetActive(true);
+        //_eggImg.gameObject.SetActive(true);
     }
     private void ShakeAndDisable()
     {
@@ -117,6 +122,8 @@ public class EggUIControll : MonoBehaviour
                      {
                          _eggImg.gameObject.SetActive(false);
                          _petImg.gameObject.SetActive(true);
+                         _glow.SetActive(true);
+                         _dropUI.GetComponent<EventTrigger>().enabled = true;
                      });
     }
 }

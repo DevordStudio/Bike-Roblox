@@ -11,14 +11,15 @@ public class EggCode : MonoBehaviour
     [SerializeField] private BankVolute _bank;
     [SerializeField] private EggUIControll _uiHandler;
     [SerializeField] private GameObject _worldEggUI;
+    [SerializeField] private MeshRenderer _meshRender;
 
-    private MeshRenderer _meshRender;
     private void Start()
     {
-        _meshRender = GetComponent<MeshRenderer>();
+        //_meshRender = GetComponent<MeshRenderer>();
         _uiHandler ??= FindAnyObjectByType<EggUIControll>();
         Button buttonOpen = _worldEggUI.GetComponentInChildren<Button>();
         buttonOpen.onClick.AddListener(OpenUI);
+        _worldEggUI.SetActive(false);
     }
     private void OnTriggerEnter(Collider other)
     {

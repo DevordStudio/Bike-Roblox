@@ -8,4 +8,6 @@ public class TrailData : ShopItemData
     //public bool HasSprite;
     //[ShowIf("HasSprite")] public Sprite Sprite;
     public int Speed;
+    public bool IsGradient;
+    public Sprite Sprite;
 }

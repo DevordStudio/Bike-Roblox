@@ -21,7 +21,7 @@ public class BankVolute : ScriptableObject
     }
     public void DecreaseMoney(int amount)
     {
-        if(_money > amount)
+        if(_money >= amount)
             _money -= amount;
         OnMoneyValueChanged?.Invoke();
     }

@@ -87,7 +87,7 @@ public class Roulette : MonoBehaviour
         var t = 0f;
         var indexPrize = CalculatorChanceItem();
         var anglePrize = 360 / Items.Length;
-        var lastAngle = 0f;
+        //var lastAngle = 0f;
         var to = Vector3.zero;
 
         while (t <= 1)
@@ -148,7 +148,7 @@ public class Roulette : MonoBehaviour
 [System.Serializable]
 public class ItemRoulette
 {
-    [SerializeField] private EggCode _egg;
+    public EggCode Egg;
     public int MoneyReward;
     public RewardType Type;
     public Image ImageOnRoulette;
@@ -171,7 +171,7 @@ public class ItemRoulette
             case RewardType.None:
                 return;
             case RewardType.Egg:
-                _egg.GetEgg();
+                Egg.GetEgg();
                 break;
             case RewardType.Money:
                 bank.IncreaseMoney(MoneyReward);

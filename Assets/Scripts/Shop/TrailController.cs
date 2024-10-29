@@ -18,6 +18,9 @@ public class TrailController : MonoBehaviour
     [SerializeField] private TMP_Text _notice;
     [SerializeField] private TrailRenderer _trailRenderer;
     [SerializeField] private BankVolute _bank;
+    [SerializeField] private TMP_Text _priceText;
+
+    private Vector2 _texScale;
 
     /*[HideInInspector]*/
     public TrailCell currentCell;
@@ -28,7 +31,19 @@ public class TrailController : MonoBehaviour
     private void Start()
     {
         GenerateCells();
+        _texScale = _trailRenderer.textureScale;
+        if (currentCell.TrailData.IsGradient)
+        {
+            _trailRenderer.textureMode = LineTextureMode.Stretch;
+            _trailRenderer.textureScale = new Vector2(1, 1);
+        }
+        else
+        {
+            _trailRenderer.textureMode = LineTextureMode.Tile;
+            _trailRenderer.textureScale = _texScale;
+        }
         _trailRenderer.material = currentCell.TrailData.Material;
+        //Equip();
         YandexGame.SwitchLangEvent += SwitchLanguage;
         UpdateUI();
     }
@@ -36,15 +51,24 @@ public class TrailController : MonoBehaviour
     {
         if (currentCell)
         {
-            if (!currentCell.TrailData.Material.GetTexture("_BaseMap"))
+            _currentCellIcon.material = null;
+            _currentCellIcon.color = Color.white;
+            if (!currentCell.TrailData.Sprite)
             {
-                _currentCellIcon.material = null;
-                _currentCellIcon.color = currentCell.TrailData.Material.color;
+
+                if (!currentCell.TrailData.Material.GetTexture("_BaseMap"))
+                {
+                    _currentCellIcon.color = currentCell.TrailData.Material.color;
+                }
+                else
+                {
+                    _currentCellIcon.color = Color.white;
+                    _currentCellIcon.material = currentCell.TrailData.Material;
+                }
             }
             else
             {
-                _currentCellIcon.color = Color.white;
-                _currentCellIcon.material = currentCell.TrailData.Material;
+                _currentCellIcon.sprite = currentCell.TrailData.Sprite;
             }
             //_name.text = currentCell.TrailData.Name;
             //SpeedBoost
@@ -54,18 +78,28 @@ public class TrailController : MonoBehaviour
                 _buttonBuy.SetActive(true);
                 _buttonEquip.SetActive(false);
                 _buttonEquiped.SetActive(false);
+                if (_priceText && !currentCell.TrailData.IsDonate)
+                {
+                    _priceText.gameObject.SetActive(true);
+                    _priceText.text = currentCell.TrailData.Price.ToString();
+                    if (_bank.GetMoney() >= currentCell.TrailData.Price) _priceText.color = Color.white;
+                    else _priceText.color = Color.red;
+                }
+                else _priceText.gameObject.SetActive(false);
             }
             else if (currentCell.TrailData.IsBought && !currentCell.TrailData.IsEquiped)
             {
                 _buttonBuy.SetActive(false);
                 _buttonEquip.SetActive(true);
                 _buttonEquiped.SetActive(false);
+                _priceText.gameObject.SetActive(false);
             }
             else
             {
                 _buttonBuy.SetActive(false);
                 _buttonEquip.SetActive(false);
                 _buttonEquiped.SetActive(true);
+                _priceText.gameObject.SetActive(false);
             }
         }
         else
@@ -73,6 +107,7 @@ public class TrailController : MonoBehaviour
             _buttonBuy.SetActive(false);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
+            _priceText.gameObject.SetActive(false);
         }//Отключить всё если currentCell нулевой
     }
     private void SwitchLanguage(string lang)
@@ -112,6 +147,16 @@ public class TrailController : MonoBehaviour
             lastCell.UpdateCell();
             currentCell.UpdateCell();
             lastCell = currentCell;
+            if (currentCell.TrailData.IsGradient)
+            {
+                _trailRenderer.textureMode = LineTextureMode.Stretch;
+                _trailRenderer.textureScale = new Vector2(1, 1);
+            }
+            else
+            {
+                _trailRenderer.textureMode = LineTextureMode.Tile;
+                _trailRenderer.textureScale = _texScale;
+            }
             _trailRenderer.material = currentCell.TrailData.Material;
         }
         UpdateUI();
@@ -139,12 +184,20 @@ public class TrailController : MonoBehaviour
     public void InitCell(TrailCell cell, TrailData data)
     {
         cell.TrailData = data;
-        if (!data.Material.GetTexture("_BaseMap"))
-            cell.Icon.color = cell.TrailData.Material.color;
+        if (!cell.TrailData.Sprite)
+        {
+            if (!data.Material.GetTexture("_BaseMap"))
+                cell.Icon.color = cell.TrailData.Material.color;
+            else
+            {
+                cell.Icon.color = Color.white;
+                cell.Icon.material = cell.TrailData.Material;
+            }
+        }
         else
         {
             cell.Icon.color = Color.white;
-            cell.Icon.material = cell.TrailData.Material;
+            cell.Icon.sprite = cell.TrailData.Sprite;
         }
         cell.IconEquiped.gameObject.SetActive(data.IsEquiped);
         cell.TrailController = this;

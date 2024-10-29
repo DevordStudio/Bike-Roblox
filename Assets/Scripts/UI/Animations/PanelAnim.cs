@@ -73,7 +73,7 @@ public class PanelAnim : MonoBehaviour
             Debug.LogError("Массив точек пустой!");
             return;
         }
-        _rectTransform.position = _animPoints[0].position;
+        _rectTransform.localPosition = _animPoints[0].localPosition;
         _rectTransform.gameObject.SetActive(true);
 
         float timePerPoint = _totalDuration / _animPoints.Length;
@@ -82,7 +82,7 @@ public class PanelAnim : MonoBehaviour
 
         foreach (RectTransform point in _animPoints)
         {
-            sequence.Append(_rectTransform.DOMove(point.position, timePerPoint));
+            sequence.Append(_rectTransform.DOLocalMove(point.localPosition, timePerPoint));
         }
         sequence.Play();
     }
@@ -94,7 +94,7 @@ public class PanelAnim : MonoBehaviour
             return;
         }
 
-        _rectTransform.position = _animPoints[_animPoints.Length - 1].position;
+        _rectTransform.localPosition = _animPoints[_animPoints.Length - 1].localPosition;
 
         float timePerPoint = _totalDuration / _animPoints.Length;
 
@@ -102,7 +102,7 @@ public class PanelAnim : MonoBehaviour
 
         for (int i = _animPoints.Length - 1; i >= 0; i--)
         {
-            sequence.Append(_rectTransform.DOMove(_animPoints[i].position, timePerPoint));
+            sequence.Append(_rectTransform.DOLocalMove(_animPoints[i].localPosition, timePerPoint));
         }
         sequence.AppendCallback(() =>
         {
