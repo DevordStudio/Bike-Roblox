@@ -40,7 +40,15 @@ public class pedalControls : MonoBehaviour
         linkToRider = GameObject.Find("char_anim").GetComponent<biker_logic_mecanim>();
 
     }
-
+    public void Jump()
+    {
+        StartCoroutine(StuntBunnyHope());
+    }
+    public void BackFlip()
+    {
+        StartCoroutine(StuntBackFlip360());
+        Debug.Log("Сальто назад");
+    }
     void Update()
     {
         //Pressing "Space" starts bunnyhop stunt
@@ -49,20 +57,20 @@ public class pedalControls : MonoBehaviour
             StartCoroutine(StuntBunnyHope());
         }
 
-        if (Input.GetKeyDown(KeyCode.N)&&!linkToBike.IsGrounded && !linkToBike.crashed)
+        if (Input.GetKeyDown(KeyCode.N) && !linkToBike.IsGrounded && !linkToBike.crashed)
         {
             StartCoroutine(StuntBackFlip360());
         }
 
-        if (Input.GetKeyDown(KeyCode.M) && !linkToBike.crashed)
-        {
-            StartCoroutine(StuntTurnLeft180());
-        }
+        //if (Input.GetKeyDown(KeyCode.M) && !linkToBike.crashed)
+        //{
+        //    StartCoroutine(StuntTurnLeft180());
+        //}
 
-        if (Input.GetKeyDown(KeyCode.B) && !linkToBike.crashed)
-        {
-            StartCoroutine(StuntBunnyShiftRight());
-        }
+        //if (Input.GetKeyDown(KeyCode.B) && !linkToBike.crashed && linkToBike.IsGrounded)
+        //{
+        //    StartCoroutine(StuntBunnyShiftRight());
+        //}
 
         if (Input.GetKeyDown(KeyCode.Slash) && !linkToBike.crashed)
         {
@@ -140,14 +148,15 @@ public class pedalControls : MonoBehaviour
     // applying physical forces to immitate stunts///////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //void StuntBunnyHope (){
-    IEnumerator StuntBunnyHope()
+    public IEnumerator StuntBunnyHope()
     {
         //linkToRider.PlayA("bannyhope");//animation is optional. You may delete this string with no bad aftermath
-        stuntBike.GetComponent<Rigidbody>().AddForce(Vector3.up * 40000);//push bike up
-        yield return new WaitForSeconds(0.1f);//a little pause between applying force
-        stuntBike.GetComponent<Rigidbody>().AddTorque(transform.right * -14000);//pull front wheel(turn bike around CoM)
-        yield return new WaitForSeconds(0.2f);//a little pause between applying force
-        stuntBike.GetComponent<Rigidbody>().AddTorque(transform.right * 20000);//push front down and pull rear up
+        stuntBike.GetComponent<Rigidbody>().AddForce(Vector3.up * linkToBike.JumpForce * 1000);//push bike up
+        //yield return new WaitForSeconds(0.1f);//a little pause between applying force
+        //stuntBike.GetComponent<Rigidbody>().AddTorque(transform.right * -14000);//pull front wheel(turn bike around CoM)
+        //yield return new WaitForSeconds(0.2f);//a little pause between applying force
+        //stuntBike.GetComponent<Rigidbody>().AddTorque(transform.right * 20000);//push front down and pull rear up
+        yield return null;
     }
     void StuntManual()
     {
@@ -157,6 +166,7 @@ public class pedalControls : MonoBehaviour
     //here is stunts
     IEnumerator StuntBackFlip360()
     {
+        if (!linkToBike.IsInAir) yield break;
         linkToRider.PlayA("backflip360");
         stuntIsOn = true;
         inStunt = true;

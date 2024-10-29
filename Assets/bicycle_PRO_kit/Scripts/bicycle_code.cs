@@ -56,7 +56,8 @@ public class bicycle_code : MonoBehaviour
     public AnimationCurve wheelbarRestrictCurve = new AnimationCurve(new Keyframe(0f, 20f), new Keyframe(100f, 1f));//first number in Keyframe is speed, second is max wheelbar degree
 
     // temporary variable to restrict wheel angle according speed
-    private float tempMaxWheelAngle;
+    [Tooltip("Максимальный угол поворота колеса")]
+    [SerializeField] private float tempMaxWheelAngle;
 
     //variable for cut off wheel bar rotation angle at high speed
     //private float wheelPossibleAngle = 0.0f;
@@ -72,6 +73,7 @@ public class bicycle_code : MonoBehaviour
 
     // airRes is for wind resistance to large bikes more than small ones
     public float airRes; //Air resistant 																										// 1 is neutral
+    public float JumpForce;
 
     private GameObject ctrlHub;// gameobject with script control variables 
     private controlHub outsideControls;// making a link to corresponding bike's script
@@ -81,10 +83,13 @@ public class bicycle_code : MonoBehaviour
     [SerializeField] private pedalControls linkToStunt;
     private bool rearPend;
 
-    [Header("Проверка на землю")]
-    [SerializeField] private float rayLength = 0.1f;
+    [Header("Проверка на землю и воздух")]
+    [SerializeField] private float rayLength = 100F;
     [SerializeField] private LayerMask groundLayer;
-    [HideInInspector] public bool IsGrounded;
+    [SerializeField] private float rayLenghtGround = 0.1F;
+    /*[HideInInspector]*/ public bool IsGrounded;
+    [SerializeField] private float rayLenghtAir = 1F;
+    /*[HideInInspector]*/ public bool IsInAir;
 
     [Header("Таймер для рестарта")]
     [SerializeField] private float _restartCoolDown = 3;
@@ -235,14 +240,30 @@ public class bicycle_code : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, rayLength, groundLayer))
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength, groundLayer))
         {
-            IsGrounded = true;
-            //Debug.Log("Объект на земле");
+            if (hit.distance <= rayLenghtGround)
+            {
+                IsGrounded = true;
+                IsInAir = false;
+            }
+            else if (hit.distance >= rayLenghtAir)
+            {
+                IsGrounded = false;
+                IsInAir = true;
+            }
+            else
+            {
+                IsGrounded = false;
+                IsInAir = false;
+            }
         }
         else
+        {
             IsGrounded = false;
-
+            IsInAir = true;
+        }
         ApplyLocalPositionToVisuals(coll_frontWheel);
         ApplyLocalPositionToVisuals(coll_rearWheel);
 
@@ -520,14 +541,14 @@ public class bicycle_code : MonoBehaviour
         // so, face it - you can't reach accurate and physics correct countersteering effect on wheelCollider
         // For that and many other reasons we restrict front wheel turn angle when when speed is growing
         //(honestly, there was a time when MotoGP bikes has restricted wheel bar rotation angle by 1.5f degree ! as we got here :)			
-        tempMaxWheelAngle = wheelbarRestrictCurve.Evaluate(bikeSpeed);//associate speed with curve which you've tuned in Editor
+        //associate speed with curve which you've tuned in Editor
 
         if (!crashed && outsideControls.Horizontal != 0)
         {
-
             // while speed is high, wheelbar is restricted 
             coll_frontWheel.steerAngle = tempMaxWheelAngle * outsideControls.Horizontal;
             steeringWheel.rotation = coll_frontWheel.transform.rotation * Quaternion.Euler(0, coll_frontWheel.steerAngle, coll_frontWheel.transform.rotation.z);
+            transform.rotation = transform.rotation * Quaternion.Euler(transform.rotation.x, coll_frontWheel.steerAngle, transform.rotation.z);
         }
         else coll_frontWheel.steerAngle = 0;
 
@@ -553,23 +574,23 @@ public class bicycle_code : MonoBehaviour
 
             GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
         }
-        if (outsideControls.HorizontalMassShift < 0)
-        {
-            var tmp_cs21 = CoM.localPosition;
-            tmp_cs21.x = outsideControls.HorizontalMassShift / 40;
-            CoM.localPosition = tmp_cs21;//40 to get 0.025m at final
+        //if (outsideControls.HorizontalMassShift < 0)
+        //{
+        //    var tmp_cs21 = CoM.localPosition;
+        //    tmp_cs21.x = outsideControls.HorizontalMassShift / 40;
+        //    CoM.localPosition = tmp_cs21;//40 to get 0.025m at final
 
-            GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
+        //    GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
 
-        }
-        if (outsideControls.HorizontalMassShift > 0)
-        {
-            var tmp_cs22 = CoM.localPosition;
-            tmp_cs22.x = outsideControls.HorizontalMassShift / 40;
-            CoM.localPosition = tmp_cs22;//40 to get 0.025m at final
+        //}
+        //if (outsideControls.HorizontalMassShift > 0)
+        //{
+        //    var tmp_cs22 = CoM.localPosition;
+        //    tmp_cs22.x = outsideControls.HorizontalMassShift / 40;
+        //    CoM.localPosition = tmp_cs22;//40 to get 0.025m at final
 
-            GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
-        }
+        //    GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
+        //}
 
 
         //auto back CoM when any key not pressed
@@ -663,7 +684,8 @@ public class bicycle_code : MonoBehaviour
         {
             _activeAnim.SetFloat("Speed", bikeSpeed / 50);
         }
-        if (bikeSpeed >= 35)
+        if (bikeSpeed >= 10
+            )
         {
             if (!_soundIsOn)
             {

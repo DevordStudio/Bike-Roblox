@@ -6,7 +6,7 @@ public class camSwitcher : MonoBehaviour
 {
 
 	public Camera backCamera;
-	public Camera aroundCamera;
+	//public Camera aroundCamera;
 	public Transform cameraTarget;
 	private Camera currentCamera;
 	//////////////////// for back Camera 
@@ -46,7 +46,7 @@ public class camSwitcher : MonoBehaviour
 		outsideControls = ctrlHub.GetComponent<controlHub>();//to connect c# mobile control script to this one
 
 		backCamera.enabled = true;
-		aroundCamera.enabled = false;
+		//aroundCamera.enabled = false;
 		currentCamera = backCamera;
 		
 		if (GetComponent<Rigidbody> ()) GetComponent<Rigidbody> ().freezeRotation = true;
@@ -88,9 +88,9 @@ public class camSwitcher : MonoBehaviour
 		} else {
 #endif
 			//backCamera.enabled = true;
-			aroundCamera.enabled = false;
+			//aroundCamera.enabled = false;
 			//backCamera.gameObject.SetActive (true);
-			aroundCamera.gameObject.SetActive (false);
+			//aroundCamera.gameObject.SetActive (false);
 			currentCamera = backCamera;
 			
 			//////////////////// code for back Camera

@@ -32,6 +32,7 @@ namespace YG
         public int MoneyRecord;
         public float MusicVolume;
         public float EffectVolume;
+        public bool TutorShown;
 
         // Поля (сохранения) можно удалять и создавать новые. При обновлении игры сохранения ломаться не должны
 
