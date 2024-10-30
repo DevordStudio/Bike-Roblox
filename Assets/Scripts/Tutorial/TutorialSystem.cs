@@ -28,6 +28,7 @@ public class TutorialSystem : MonoBehaviour
         _cameraMain = Camera.main;
         if (YandexGame.savesData.TutorShown)
         {
+           _controll.enabled = false;
             PlayThisPart();
             _cameraMain.gameObject.SetActive(false);
             _cam.SetActive(true);
@@ -110,6 +111,7 @@ public class TutorialSystem : MonoBehaviour
         _mobileControlls.SetActive(YandexGame.EnvironmentData.isMobile);
         _cam.SetActive(false);
         _cameraMain.gameObject.SetActive(true);
+        _controll.enabled = true;
         YandexGame.savesData.TutorShown = true;
     }
     private void ActivateMapButton()
