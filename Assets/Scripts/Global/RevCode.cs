@@ -25,6 +25,7 @@ public class RevCode : MonoBehaviour
     public void GiveReward()
     {
         _bank.IncreaseMoney(_reward);
+        YandexGame.FullscreenShow();
         Debug.Log("Игрок получил награду за отзыв");
     }
 }

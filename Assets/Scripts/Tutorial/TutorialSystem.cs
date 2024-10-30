@@ -22,16 +22,16 @@ public class TutorialSystem : MonoBehaviour
     private int _currentStep;
     private void Start()
     {
-        //_cameraMain = Camera.main;
-        //if (!YandexGame.savesData.TutorShown)
-        //{
+        _cameraMain = Camera.main;
+        if (!YandexGame.savesData.TutorShown)
+        {
             _skipTutor.onClick.AddListener(CloseTutor);
             Debug.Log("Врубаю обучение");
             _input.ToogleControl(false);
             PlayThisPart();
             _cameraMain.gameObject.SetActive(false);
             _cam.SetActive(true);
-        //}
+        }
     }
     //private void Start()
     //{

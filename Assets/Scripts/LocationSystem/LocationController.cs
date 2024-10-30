@@ -37,6 +37,7 @@ public class LocationController : MonoBehaviour
                 ActiveLocationId = location.Id;
                 if (location.Skybox)
                     RenderSettings.skybox = location.Skybox;
+                RenderSettings.subtractiveShadowColor = Color.white;
             }
         }
     }
