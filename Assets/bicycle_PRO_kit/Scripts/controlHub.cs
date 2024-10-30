@@ -15,10 +15,10 @@ public class controlHub : MonoBehaviour  {//need that for mobile controls
 	public float VerticalMassShift;//variable for pilot's mass translate along bike
 	public float HorizontalMassShift;//variable for pilot's mass translate across bike
 
-	public bool rearBrakeOn;//this variable says to bike's script to use rear brake
-	public bool restartBike;//this variable says to bike's script restart
-	public bool fullRestartBike; //this variable says to bike's script to full restart
+	public bool rearBrakeOn { get; set; }//this variable says to bike's script to use rear brake
+	public bool restartBike { get; set; }//this variable says to bike's script restart
+	public bool fullRestartBike { get; set; } //this variable says to bike's script to full restart
 
-	public bool reverse;//for reverse speed
+	public bool reverse { get; set; }//for reverse speed
 
 }

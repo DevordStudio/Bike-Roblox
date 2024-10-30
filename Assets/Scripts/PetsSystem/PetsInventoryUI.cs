@@ -4,6 +4,7 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class PetsInventoryUI : MonoBehaviour
 {
@@ -27,25 +28,30 @@ public class PetsInventoryUI : MonoBehaviour
         PetCell.OnCellSelected += UpdateUI;
         _invent.OnPetAdded += GenerateCell;
         _invent.OnInventoryChanged += UpdateCountText;
+        YandexGame.SwitchLangEvent += SwitchLanduage;
         foreach (var pet in _invent.GetPets())
             GenerateCell(pet);
         CheckCurrentCell();
         if (_invent.GetPets().Count > 0) UpdateUI(_currentCell);
+        //else ToogleUI(false);
+        SwitchLanduage(YandexGame.lang);
+        UpdateCountText();
     }
-    private void OnDisable()
+    private void OnDestroy()
     {
         PetCell.OnCellSelected -= UpdateUI;
         _invent.OnInventoryChanged -= UpdateCountText;
         _invent.OnPetAdded -= GenerateCell;
     }
-    private void Test()
+    private void SwitchLanduage(string lang)
     {
-        foreach(var item in _invent.GetPets())
-        {
-            GenerateCell(item);
-        }
-        UpdateUI(_currentCell);
-        CheckCurrentCell();
+        if (!_currentCell) return;
+        if (lang == "ru")
+            _currentPetName.text = _currentCell.Pet.PetData.NameRus;
+        else if (lang == "tr")
+            _currentPetName.text = _currentCell.Pet.PetData.NameTr;
+        else
+            _currentPetName.text = _currentCell.Pet.PetData.NameEn;
     }
     private void GenerateCell(PetInInventory pet)
     {
@@ -104,7 +110,7 @@ public class PetsInventoryUI : MonoBehaviour
         cellCode.IconSelected.SetActive(true);
         _currentCell = cellCode;
         _currentPetImg.sprite = cellCode.Pet.PetData.Sprite;
-        _currentPetName.text = cellCode.Pet.PetData.Name;
+        SwitchLanduage(YandexGame.lang);
         CheckCurrentCell();
         if (cellCode.Pet.IsEquiped)
         {

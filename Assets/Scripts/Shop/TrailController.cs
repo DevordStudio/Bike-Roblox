@@ -21,6 +21,7 @@ public class TrailController : MonoBehaviour
     [SerializeField] private TMP_Text _priceText;
 
     private Vector2 _texScale;
+    private Sprite _spriteSave;
 
     /*[HideInInspector]*/
     public TrailCell currentCell;
@@ -45,7 +46,12 @@ public class TrailController : MonoBehaviour
         _trailRenderer.material = currentCell.TrailData.Material;
         //Equip();
         YandexGame.SwitchLangEvent += SwitchLanguage;
+        _spriteSave = _currentCellIcon.sprite;
         UpdateUI();
+    }
+    private void OnDestroy()
+    {
+        YandexGame.SwitchLangEvent -= SwitchLanguage;
     }
     public void UpdateUI()
     {
@@ -53,6 +59,7 @@ public class TrailController : MonoBehaviour
         {
             _currentCellIcon.material = null;
             _currentCellIcon.color = Color.white;
+            _currentCellIcon.sprite = _spriteSave;
             if (!currentCell.TrailData.Sprite)
             {
 
