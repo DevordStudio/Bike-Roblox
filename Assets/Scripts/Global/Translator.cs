@@ -12,7 +12,7 @@ public class Translator : MonoBehaviour
     [TextArea]
     [SerializeField] private string _englishText;
 
-    private void Start()
+    private void Awake()
     {
         YandexGame.SwitchLangEvent += ChangeText;
         _text ??= GetComponent<TMP_Text>();

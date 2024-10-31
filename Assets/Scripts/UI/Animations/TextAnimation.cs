@@ -66,11 +66,11 @@ public class TextAnimation : MonoBehaviour
 
         SwitchColor();
 
-        if (instant)
-        {
-            _message.ForceMeshUpdate();
-            _message.UpdateVertexData();
-        }
+        //if (instant)
+        //{
+        //    //_message.ForceMeshUpdate();
+        //    _message.UpdateVertexData();
+        //}
     }
 
     private void SwitchColor()
@@ -91,6 +91,7 @@ public class TextAnimation : MonoBehaviour
                 vertexColors[vertexIndex + 2].a = (byte)_rightAlphas[i];
                 vertexColors[vertexIndex + 3].a = (byte)_rightAlphas[i];
             }
+            _message.UpdateVertexData();
         }
         _message.UpdateVertexData();
     }
