@@ -117,6 +117,8 @@ public class bicycle_code : MonoBehaviour
     private bool _soundIsOn;
     public float effectVolume;
 
+    public bool IsBoosted;
+
     [HideInInspector]
     public float bikeSpeed; //to know bike speed km/h
     public bool isReverseOn = false; //to turn On and Off reverse speed

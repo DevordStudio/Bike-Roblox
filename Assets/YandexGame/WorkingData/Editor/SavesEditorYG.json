@@ -1,5 +1,5 @@
 {
-    "idSave": 42,
+    "idSave": 81,
     "isFirstSession": false,
     "language": "ru",
     "promptDone": false,
@@ -10,13 +10,13 @@
         true,
         false
     ],
-    "Money": 450,
+    "Money": 2200,
     "Is2XSpeed": false,
     "Is2XMoney": false,
     "SpeedBoostTimer": 0.0,
     "MoneyBoostTimer": 0.0,
     "TempKdRotateRoulette": 0.0,
-    "petInventoryData": "",
+    "petInventoryData": "{\"pets\":[{\"petDataId\":836,\"IsEquiped\":true,\"Id\":1}],\"nextId\":2}",
     "shopItemsData": [
         {
             "Id": 7,

@@ -24,9 +24,10 @@ public class SpeedBoostPoint : MonoBehaviour
 
     private void Boost(bicycle_code player)
     {
-        if (_isCanBoost)
+        if (_isCanBoost && !player.IsBoosted)
         {
             _isCanBoost = false;
+            player.IsBoosted = true;
             _model.SetActive(false);
             player.LegsPower *= _boostCoff;
             StartCoroutine(SpeedCor(player));
@@ -38,6 +39,7 @@ public class SpeedBoostPoint : MonoBehaviour
     {
         yield return new WaitForSeconds(_boostTime);
         player.LegsPower /= _boostCoff;
+        player.IsBoosted = false;
         Debug.Log("Ёффект скорости закончилс€");
         StopAllCoroutines();
     }

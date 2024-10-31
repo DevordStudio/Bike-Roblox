@@ -42,9 +42,10 @@ public class SpeedBoost : MonoBehaviour
     private void GetBoost(int id)
     {
         if (id != 2) return;
-        if (!_is2X)
+        if (!_is2X && !_bikeCode.IsBoosted)
         {
             _bikeCode.LegsPower *= _speedBoostCoff;
+            _bikeCode.IsBoosted = true;
             _is2X = true;
             _soundController.PlayBoostSound();
             OnConditionChanged?.Invoke(_is2X);
@@ -60,6 +61,7 @@ public class SpeedBoost : MonoBehaviour
             if (_timer >= _boostTime)
             {
                 _is2X = false;
+                _bikeCode.IsBoosted = false;
                 _timer = 0;
                 _bikeCode.LegsPower /= _speedBoostCoff;
                 _reloadImage.fillAmount = 0;
