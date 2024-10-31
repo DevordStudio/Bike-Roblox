@@ -61,10 +61,10 @@ public class camSwitcher : MonoBehaviour
 		if (Input.GetMouseButton (1)) {
 
 			backCamera.enabled = false;
-			aroundCamera.enabled = true;
+			//aroundCamera.enabled = true;
 			backCamera.gameObject.SetActive (false);
-			aroundCamera.gameObject.SetActive (true);
-			currentCamera = aroundCamera;
+			//aroundCamera.gameObject.SetActive (true);
+			//currentCamera = aroundCamera;
 			
 			
 			x += Input.GetAxis ("Mouse X") * xSpeed;
