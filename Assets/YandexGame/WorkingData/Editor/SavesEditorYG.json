@@ -1,5 +1,5 @@
 {
-    "idSave": 14,
+    "idSave": 42,
     "isFirstSession": false,
     "language": "ru",
     "promptDone": false,
@@ -10,14 +10,30 @@
         true,
         false
     ],
-    "Money": 0,
+    "Money": 450,
     "Is2XSpeed": false,
     "Is2XMoney": false,
     "SpeedBoostTimer": 0.0,
     "MoneyBoostTimer": 0.0,
     "TempKdRotateRoulette": 0.0,
     "petInventoryData": "",
-    "shopItemsData": [],
+    "shopItemsData": [
+        {
+            "Id": 7,
+            "IsBought": true,
+            "IsEquiped": true
+        },
+        {
+            "Id": 6,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 8,
+            "IsBought": false,
+            "IsEquiped": false
+        }
+    ],
     "MoneyRecord": 0,
     "MusicVolume": 0.0,
     "EffectVolume": 0.5,
