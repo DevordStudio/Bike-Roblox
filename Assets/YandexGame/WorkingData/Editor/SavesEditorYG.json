@@ -1,5 +1,5 @@
 {
-    "idSave": 218,
+    "idSave": 115,
     "isFirstSession": false,
     "language": "ru",
     "promptDone": false,
@@ -10,7 +10,7 @@
         true,
         false
     ],
-    "Money": 8000,
+    "Money": 5250,
     "Is2XSpeed": false,
     "Is2XMoney": false,
     "SpeedBoostTimer": 0.0,
@@ -19,23 +19,23 @@
     "petInventoryData": "",
     "shopItemsData": [
         {
-            "Id": 7,
-            "IsBought": true,
-            "IsEquiped": false
-        },
-        {
-            "Id": 6,
-            "IsBought": true,
-            "IsEquiped": false
-        },
-        {
-            "Id": 8,
+            "Id": 6672,
             "IsBought": true,
             "IsEquiped": true
+        },
+        {
+            "Id": 34,
+            "IsBought": true,
+            "IsEquiped": false
+        },
+        {
+            "Id": 5161,
+            "IsBought": true,
+            "IsEquiped": false
         }
     ],
     "MoneyRecord": 0,
     "MusicVolume": 0.0,
-    "EffectVolume": 0.5704201459884644,
-    "TutorShown": false
+    "EffectVolume": 0.5,
+    "TutorShown": true
 }

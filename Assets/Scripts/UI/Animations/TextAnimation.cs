@@ -32,6 +32,7 @@ public class TextAnimation : MonoBehaviour
     {
         _leftAlphas = new float[_message.text.Length].ToList();
         _rightAlphas = new float[_message.text.Length].ToList();
+        PlayAnim();
     }
     public void PlayAnim()
     {
@@ -42,8 +43,9 @@ public class TextAnimation : MonoBehaviour
     public void ShowInstant()
     {
         _isAnimating = false;
-        ShowText(false);
+        ShowText(true);
     }
+
     ///<summary>
     ///Отображает текст.
     ///</summary>
@@ -61,11 +63,19 @@ public class TextAnimation : MonoBehaviour
             _leftAlphas[i] = instant ? 255 : 0;
             _rightAlphas[i] = instant ? 255 : 0;
         }
+
         SwitchColor();
+
+        if (instant)
+        {
+            _message.ForceMeshUpdate();
+            _message.UpdateVertexData();
+        }
     }
 
     private void SwitchColor()
     {
+        _message.ForceMeshUpdate();
         for (int i = 0; i < _leftAlphas.Count; i++)
         {
             if (_message.textInfo.characterInfo[i].character != '\n' &&

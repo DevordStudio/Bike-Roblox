@@ -14,12 +14,14 @@ public class ControllSwitcher : MonoBehaviour
             _mobileController.enabled = false;
             _keyboardController.enabled = true;
             _mobileUI.SetActive(false);
+            Debug.Log("Включено управление с клавиатуры");
         }
-        if (YandexGame.EnvironmentData.isMobile)
+        else if (YandexGame.EnvironmentData.isMobile)
         {
             _mobileController.enabled = true;
             _keyboardController.enabled = false;
             _mobileUI.SetActive(true);
+            Debug.Log("Включено управление с сенсора");
         }
     }
 }

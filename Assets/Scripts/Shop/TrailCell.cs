@@ -21,7 +21,8 @@ public class TrailCell : MonoBehaviour
         //TrailController.lastCell = TrailController.currentCell;
         TrailController.currentCell = this;
         IconSelected.SetActive(true);
-        TrailController.lastSelected.IconSelected.SetActive(false);
+        if (TrailController.lastSelected)
+            TrailController.lastSelected.IconSelected.SetActive(false);
         TrailController.lastSelected = this;
         TrailController.UpdateUI();
     }

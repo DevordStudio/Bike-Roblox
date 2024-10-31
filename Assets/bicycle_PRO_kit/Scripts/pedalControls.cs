@@ -1,6 +1,7 @@
 // Writen by Boris Chuprin smokerr@mail.ru
 using UnityEngine;
 using System.Collections;
+using YG;
 
 public class pedalControls : MonoBehaviour
 {
@@ -52,12 +53,12 @@ public class pedalControls : MonoBehaviour
     void Update()
     {
         //Pressing "Space" starts bunnyhop stunt
-        if (Input.GetKeyDown("space") && linkToBike.IsGrounded && !linkToBike.crashed)
+        if (Input.GetKeyDown("space") && linkToBike.IsGrounded && !linkToBike.crashed && YandexGame.EnvironmentData.isDesktop)
         {
             StartCoroutine(StuntBunnyHope());
         }
 
-        if (Input.GetKeyDown(KeyCode.N) && !linkToBike.IsGrounded && !linkToBike.crashed)
+        if (Input.GetKeyDown(KeyCode.N) && !linkToBike.IsGrounded && !linkToBike.crashed && YandexGame.EnvironmentData.isDesktop)
         {
             StartCoroutine(StuntBackFlip360());
         }
@@ -72,12 +73,12 @@ public class pedalControls : MonoBehaviour
         //    StartCoroutine(StuntBunnyShiftRight());
         //}
 
-        if (Input.GetKeyDown(KeyCode.Slash) && !linkToBike.crashed)
+        if (Input.GetKeyDown(KeyCode.Slash) && !linkToBike.crashed && YandexGame.EnvironmentData.isDesktop)
         {
             StartCoroutine(StuntHoldForOneSecond());
         }
         //"2" for manual
-        if (Input.GetKeyDown(KeyCode.Alpha2) && !linkToBike.crashed)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !linkToBike.crashed && YandexGame.EnvironmentData.isDesktop)
         {
             StuntManual();
         }
@@ -150,6 +151,7 @@ public class pedalControls : MonoBehaviour
     //void StuntBunnyHope (){
     public IEnumerator StuntBunnyHope()
     {
+        if (!linkToBike.IsGrounded) yield break;
         //linkToRider.PlayA("bannyhope");//animation is optional. You may delete this string with no bad aftermath
         stuntBike.GetComponent<Rigidbody>().AddForce(Vector3.up * linkToBike.JumpForce * 1000);//push bike up
         //yield return new WaitForSeconds(0.1f);//a little pause between applying force

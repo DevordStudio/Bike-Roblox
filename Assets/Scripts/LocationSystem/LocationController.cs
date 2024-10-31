@@ -6,8 +6,8 @@ public class LocationController : MonoBehaviour
 {
     [Header("Скрипт для управления локациями")]
     [HorizontalLine(color: EColor.Indigo)]
-    [SerializeField] LocationData[] _locations;
-    public LocationData[] Locations
+    [SerializeField] LocationInfo[] _locations;
+    public LocationInfo[] Locations
     {
         get
         {
@@ -20,7 +20,7 @@ public class LocationController : MonoBehaviour
     {
         foreach (var location in _locations)
         {
-            location.LocationInfo.IsEquiped = location.LocationInfo.Id == Id;
+            location.IsEquiped = location.Id == Id;
             ActiveLocationId = Id;
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -32,11 +32,11 @@ public class LocationController : MonoBehaviour
         foreach (var location in _locations)
         {
             //location.Location.SetActive(location.LocationInfo.IsEquiped);
-            if (location.LocationInfo.IsEquiped)
+            if (location.IsEquiped)
             {
-                ActiveLocationId = location.LocationInfo.Id;
-                if (location.LocationInfo.Skybox)
-                    RenderSettings.skybox = location.LocationInfo.Skybox;
+                ActiveLocationId = location.Id;
+                if (location.Skybox)
+                    RenderSettings.skybox = location.Skybox;
             }
         }
     }

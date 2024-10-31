@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using YG;
@@ -17,23 +16,33 @@ public class TutorialSystem : MonoBehaviour
     [SerializeField] private GameObject[] _hidingUI;
     [SerializeField] private GameObject _mobileControlls;
     [SerializeField] private Button _skipTutor;
+    [SerializeField] private InputBlocker _input;
+    [SerializeField] private Camera _cameraMain;
 
-    private Camera _cameraMain;
-    private controlHub _controll;
     private int _currentStep;
-
     private void Start()
     {
-        _controll = FindAnyObjectByType<controlHub>();
-        _cameraMain = Camera.main;
-        if (YandexGame.savesData.TutorShown)
-        {
-           _controll.enabled = false;
+        //_cameraMain = Camera.main;
+        //if (!YandexGame.savesData.TutorShown)
+        //{
+            _skipTutor.onClick.AddListener(CloseTutor);
+            Debug.Log("Врубаю обучение");
+            _input.ToogleControl(false);
             PlayThisPart();
             _cameraMain.gameObject.SetActive(false);
             _cam.SetActive(true);
-        }
+        //}
     }
+    //private void Start()
+    //{
+    //    _cameraMain = Camera.main;
+    //    if (YandexGame.savesData.TutorShown)
+    //    {
+    //        PlayThisPart();
+    //        _cameraMain.gameObject.SetActive(false);
+    //        _cam.SetActive(true);
+    //    }
+    //}
     public void PlayThisPart()
     {
         foreach (var part in _allParts)
@@ -49,7 +58,7 @@ public class TutorialSystem : MonoBehaviour
     }
     private void ControllTutor()
     {
-        _allParts[_currentStep].TutorUI.SetActive(false);
+        _allParts[_currentStep-1].TutorUI.SetActive(false);
         if (YandexGame.EnvironmentData.isDesktop)
         {
             _PCTutor.SetActive(true);
@@ -65,9 +74,10 @@ public class TutorialSystem : MonoBehaviour
         else if (YandexGame.EnvironmentData.isMobile)
         {
             _mobileTutor.SetActive(true);
-            Button buttonNext = _PCTutor.GetComponentInChildren<Button>();
+            Button buttonNext = _mobileTutor.GetComponentInChildren<Button>();
             buttonNext.interactable = false;
             buttonNext.onClick.AddListener(AnimCameraStart);
+            Debug.Log("Включен мобильный туториал");
             Invoke(nameof(ActivateMobileButton), _buttonBlockDelay);
             foreach (var item in _hidingUI)
             {
@@ -78,6 +88,9 @@ public class TutorialSystem : MonoBehaviour
     private void AnimCameraStart()
     {
         _mobileControlls.SetActive(false);
+        _PCTutor.SetActive(false);
+        _mobileTutor.SetActive(false);
+        print("Начата анимация камеры");
         Button button = _mapTutor.GetComponentInChildren<Button>();
         button.interactable = false;
         button.onClick.AddListener(CloseTutor);
@@ -85,14 +98,19 @@ public class TutorialSystem : MonoBehaviour
     }
     private IEnumerator AnimCamera()
     {
-        if (Vector3.Distance(_cam.transform.position, _camPoint.position) > 0.1F)
-            _cam.transform.position = Vector3.Lerp(_cam.transform.position, _camPoint.position, _cameraAnimTime);
-        else
+        float elapsedTime = 0f;
+        Vector3 startingPos = _cam.transform.position;
+
+        while (Vector3.Distance(_cam.transform.position, _camPoint.position) > 0.1F)
         {
-            _mapTutor.SetActive(true);
-            Invoke(nameof(ActivateMapButton), _buttonBlockDelay);
-            yield break;
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / _cameraAnimTime);
+            _cam.transform.position = Vector3.Lerp(startingPos, _camPoint.position, t);
+            yield return null;
         }
+
+        _mapTutor.SetActive(true);
+        Invoke(nameof(ActivateMapButton), _buttonBlockDelay);
     }
     private void CloseTutor()
     {
@@ -104,14 +122,17 @@ public class TutorialSystem : MonoBehaviour
         {
             item.TutorUI.SetActive(false);
         }
+        StopAllCoroutines();
         _mapTutor.SetActive(false);
         _PCTutor.SetActive(false);
+        _mobileTutor.SetActive(false);
         _mobileControlls.SetActive(false);
         _mapTutor.SetActive(false);
         _mobileControlls.SetActive(YandexGame.EnvironmentData.isMobile);
         _cam.SetActive(false);
         _cameraMain.gameObject.SetActive(true);
-        _controll.enabled = true;
+        _input.ToogleControl(true);
+        _skipTutor.gameObject.SetActive(false);
         YandexGame.savesData.TutorShown = true;
     }
     private void ActivateMapButton()

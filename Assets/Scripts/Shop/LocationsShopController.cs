@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using YG;
@@ -58,44 +57,44 @@ public class LocationsShopController : MonoBehaviour
     }
     private void UpdateName(string lang)
     {
-        LocationData currentLocation = _locationController.Locations[_currentIndex];
+        LocationInfo currentLocation = _locationController.Locations[_currentIndex];
         if (lang == "ru")
-            _nameText.text = currentLocation.LocationInfo.NameRus;
+            _nameText.text = currentLocation.NameRus;
         else if (lang == "en")
-            _nameText.text = currentLocation.LocationInfo.NameEn;
+            _nameText.text = currentLocation.NameEn;
         else if (lang == "tr")
-            _nameText.text = currentLocation.LocationInfo.NameTr;
+            _nameText.text = currentLocation.NameTr;
     }
     public void UpdateUI()
     {
-        LocationData currentLocation = _locationController.Locations[_currentIndex];
+        LocationInfo currentLocation = _locationController.Locations[_currentIndex];
         UpdateName(YandexGame.lang);
         if (currentLocation)
         {
-            _locationImage.sprite = currentLocation.LocationInfo.Sprite;
+            _locationImage.sprite = currentLocation.Sprite;
             //_nameText.text = currentLocation.LocationInfo.Name;
-            if (!currentLocation.LocationInfo.IsBought) //Если карта не куплена
+            if (!currentLocation.IsBought) //Если карта не куплена
             {
                 _buttonBuy.SetActive(true);
                 _buttonPlay.SetActive(false);
                 _buttonThisLocation.SetActive(false);
-                if (_priceText && !currentLocation.LocationInfo.IsDonate)
+                if (_priceText && !currentLocation.IsDonate)
                 {
                     _priceText.gameObject.SetActive(true);
-                    _priceText.text = currentLocation.LocationInfo.Price.ToString();
-                    if (_bank.GetMoney() >= currentLocation.LocationInfo.Price) _priceText.color = Color.white;
+                    _priceText.text = currentLocation.Price.ToString();
+                    if (_bank.GetMoney() >= currentLocation.Price) _priceText.color = Color.white;
                     else _priceText.color = Color.red;
                 }
                 else _priceText.gameObject.SetActive(false);
             }
-            else if (currentLocation.LocationInfo.IsBought && !currentLocation.LocationInfo.IsEquiped)// Если куплена и не является текущей
+            else if (currentLocation.IsBought && !currentLocation.IsEquiped)// Если куплена и не является текущей
             {
                 _buttonBuy.SetActive(false);
                 _buttonPlay.SetActive(true);
                 _buttonThisLocation.SetActive(false);
                 _priceText.gameObject.SetActive(false);
             }
-            else if (currentLocation.LocationInfo.IsBought && currentLocation.LocationInfo.IsEquiped)
+            else if (currentLocation.IsBought && currentLocation.IsEquiped)
             {
                 _buttonBuy.SetActive(false);
                 _buttonPlay.SetActive(false);
@@ -106,22 +105,22 @@ public class LocationsShopController : MonoBehaviour
     }
     public void Buy()
     {
-        LocationData loc = _locationController.Locations[_currentIndex];
-        if (!loc.LocationInfo.IsBought && _bank.GetMoney() >= loc.LocationInfo.Price && !loc.LocationInfo.IsDonate)
+        LocationInfo loc = _locationController.Locations[_currentIndex];
+        if (!loc.IsBought && _bank.GetMoney() >= loc.Price && !loc.IsDonate)
         {
-            _bank.DecreaseMoney(loc.LocationInfo.Price);
-            loc.LocationInfo.Buy();
+            _bank.DecreaseMoney(loc.Price);
+            loc.Buy();
             UpdateUI();
         }
-        else if (loc.LocationInfo.IsDonate)
+        else if (loc.IsDonate)
         {
-            YandexGame.BuyPayments(loc.LocationInfo.Id.ToString());
+            YandexGame.BuyPayments(loc.Id.ToString());
         }
     }
     public void Play()
     {
-        LocationData loc = _locationController.Locations[_currentIndex];
-        if (!loc.LocationInfo.IsEquiped)
-            loc.LocationInfo.Equip();
+        LocationInfo loc = _locationController.Locations[_currentIndex];
+        if (!loc.IsEquiped)
+            loc.Equip();
     }
 }

@@ -157,6 +157,7 @@ public class PanelAnim : MonoBehaviour
         });
         sequence.Play();
     }
+    public GameObject GetTarget() => _rectTransform.gameObject;
 }
 public enum PanelAnimType
 {

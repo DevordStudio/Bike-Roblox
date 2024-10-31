@@ -4,10 +4,12 @@ using YG;
 
 public class Translator : MonoBehaviour
 {
-    [TextArea]
     [SerializeField] private TMP_Text _text;
+    [TextArea]
     [SerializeField] private string _turkishText;
+    [TextArea]
     [SerializeField] private string _russianText;
+    [TextArea]
     [SerializeField] private string _englishText;
 
     private void Start()

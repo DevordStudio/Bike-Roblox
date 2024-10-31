@@ -34,7 +34,7 @@ public class mobileControls : MonoBehaviour, IDragHandler, IPointerUpHandler, IP
 		outsideControls = ctrlHub.GetComponent<controlHub>();// making a link to corresponding bike's script
 
 		joystickImg = bgImgJoyRight.transform.GetChild(0).GetComponent<Image>();//find stick
-		joystickImgLeft = bgImgJoyLeft.transform.GetChild(0).GetComponent<Image>();//find stick
+		//joystickImgLeft = bgImgJoyLeft.transform.GetChild(0).GetComponent<Image>();//find stick
 	}
 
 	//Uncomment it if you want to lean by device rotation :)
@@ -69,23 +69,23 @@ public class mobileControls : MonoBehaviour, IDragHandler, IPointerUpHandler, IP
 			}
 		}
 
-		Vector2 pos_j2;//position for joystick Left
-		if (RectTransformUtility.ScreenPointToLocalPointInRectangle (bgImgJoyLeft.rectTransform, ped.position, ped.pressEventCamera, out pos_j2)){
-			if (ped.position.x > Screen.width/2 && ped.position.y < 170){//use buttons should't take effect to joystics
-				pos_j2.x = (pos_j2.x / bgImgJoyLeft.rectTransform.sizeDelta.x);
-				pos_j2.y = (pos_j2.y / bgImgJoyLeft.rectTransform.sizeDelta.y);
+		//Vector2 pos_j2;//position for joystick Left
+		//if (RectTransformUtility.ScreenPointToLocalPointInRectangle (bgImgJoyLeft.rectTransform, ped.position, ped.pressEventCamera, out pos_j2)){
+		//	if (ped.position.x > Screen.width/2 && ped.position.y < 170){//use buttons should't take effect to joystics
+		//		pos_j2.x = (pos_j2.x / bgImgJoyLeft.rectTransform.sizeDelta.x);
+		//		pos_j2.y = (pos_j2.y / bgImgJoyLeft.rectTransform.sizeDelta.y);
 			
-				inputVectorLeft = new Vector3(pos_j2.x*2 + 1,0,pos_j2.y*2 - 1);
-				inputVectorLeft = (inputVectorLeft.magnitude > 1.0f)?inputVectorLeft.normalized:inputVectorLeft;
+		//		inputVectorLeft = new Vector3(pos_j2.x*2 + 1,0,pos_j2.y*2 - 1);
+		//		inputVectorLeft = (inputVectorLeft.magnitude > 1.0f)?inputVectorLeft.normalized:inputVectorLeft;
 			
-				//move stick
-				joystickImgLeft.rectTransform.anchoredPosition =
-					new Vector3(inputVectorLeft.x * (bgImgJoyLeft.rectTransform.sizeDelta.x/2) ,inputVectorLeft.z * (bgImgJoyLeft.rectTransform.sizeDelta.y/2));
+		//		//move stick
+		//		joystickImgLeft.rectTransform.anchoredPosition =
+		//			new Vector3(inputVectorLeft.x * (bgImgJoyLeft.rectTransform.sizeDelta.x/2) ,inputVectorLeft.z * (bgImgJoyLeft.rectTransform.sizeDelta.y/2));
 
-				outsideControls.VerticalMassShift = inputVectorLeft.z;
-				outsideControls.HorizontalMassShift = inputVectorLeft.x;
-			}
-		}
+		//		outsideControls.VerticalMassShift = inputVectorLeft.z;
+		//		outsideControls.HorizontalMassShift = inputVectorLeft.x;
+		//	}
+		//}
 	}
 
 /////////////////////////////////////////// pointer function ////////////////////////////////////////////////////////////////////
@@ -110,8 +110,8 @@ public class mobileControls : MonoBehaviour, IDragHandler, IPointerUpHandler, IP
 
 		inputVector = Vector3.zero;
 		joystickImg.rectTransform.anchoredPosition = Vector3.zero;
-		inputVectorLeft = Vector3.zero;
-		joystickImgLeft.rectTransform.anchoredPosition = Vector3.zero;
+		//inputVectorLeft = Vector3.zero;
+		//joystickImgLeft.rectTransform.anchoredPosition = Vector3.zero;
 		outsideControls.rearBrakeOn = false;
 		outsideControls.restartBike = false;
 		outsideControls.fullRestartBike = false;
