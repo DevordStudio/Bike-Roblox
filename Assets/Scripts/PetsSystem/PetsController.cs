@@ -40,7 +40,7 @@ public class PetsController : MonoBehaviour
             return;
         }
 
-        var petGO = Instantiate(pet.PetData.PetModel, spawnPoint.position, pet.PetData.PetModel.transform.rotation, spawnPoint.transform);
+        var petGO = Instantiate(pet.PetData.PetModel, /*spawnPoint.position, spawnPoint.rotation,*/ spawnPoint.transform);
         petGO.name = pet.Id.ToString();
         _petGO.Add(petGO);
         Debug.Log($"Создана модель питомца с Id {pet.Id}");

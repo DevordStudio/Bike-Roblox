@@ -17,7 +17,8 @@ public class GiftBoxCode : MonoBehaviour
             _claimed = true;
             OwnPoint.Bank.IncreaseMoney(_reward);
             Debug.Log($"Коробка открыта. Игрок получил {_reward} денег");
-            OwnPoint.InvokeSpawn();
+            if (!OwnPoint.IsNotReloadable)
+                OwnPoint.InvokeSpawn();
             PlayAnim();
         }
     }

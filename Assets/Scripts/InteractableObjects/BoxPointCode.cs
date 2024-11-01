@@ -6,6 +6,7 @@ public class BoxPointCode : MonoBehaviour
     [SerializeField] private float _spawnTime;
 
     private GiftBoxCode _currentBox;
+    public bool IsNotReloadable;
 
     public BankVolute Bank;
     private void Start()

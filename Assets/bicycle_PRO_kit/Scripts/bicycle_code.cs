@@ -185,6 +185,7 @@ public class bicycle_code : MonoBehaviour
         SetEffectVolume();
         //CharacterController.OnCharacterChanged += ChangeCharacter;
         SpeedBoost.OnConditionChanged += BoostedEffect;
+        SpeedBoostPoint.OnBoosted += BoostedEffect;
         //if there is no pendulum linked to script in Editor, it means MTB have no rear suspension, so no movement of rear wheel(pendulum)
         if (rearPendulumn)
         {
