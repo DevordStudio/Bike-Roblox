@@ -16,6 +16,7 @@ public class RoluetteUIController : MonoBehaviour
     [SerializeField] private Button _startRouletteButton;
     [SerializeField] private Button _closeButton;
     [SerializeField] private int _spinCost = 100;
+    [SerializeField] private TMP_Text _costText;
     [SerializeField] private BankVolute _bank;
     [SerializeField] private bool _freeSpin = false;
     [SerializeField] private float _remainingTime = 0f;
@@ -28,7 +29,9 @@ public class RoluetteUIController : MonoBehaviour
     {
         _startRouletteButton.onClick.AddListener(RotateRoulette);
         _roulette.EndRotateEvent += EndRotate;
-
+        YandexGame.RewardVideoEvent += RewardSpin;
+        BankVolute.OnMoneyValueChanged += UpdateCostText;
+        _costText.text = _spinCost.ToString();
         _remainingTime = YandexGame.savesData.TempKdRotateRoulette;
         if (_remainingTime > 0)
             StartCoroutine(CheckFreeSpinCoroutine());
@@ -56,6 +59,14 @@ public class RoluetteUIController : MonoBehaviour
         }
         YandexGame.SwitchLangEvent += InvokeTimeUpdate;
     }
+    private void UpdateCostText()
+    {
+        _costText.text = _spinCost.ToString();
+        if (_bank.GetMoney() >= _spinCost)
+            _costText.color = Color.white;
+        else 
+            _costText.color = Color.red;
+    }
     private void InvokeTimeUpdate(string lang) => UpdateTimeUI(_remainingTime, lang);
     private IEnumerator CheckFreeSpinCoroutine()
     {
@@ -68,7 +79,15 @@ public class RoluetteUIController : MonoBehaviour
         UnlockFreeSpin();
         SaveProgress();
     }
-
+    private void RewardSpin(int id)
+    {
+        if(id == 4)
+        {
+            UnlockFreeSpin();
+            SaveProgress();
+            Debug.Log("Игрок получил бесплатную крутку");
+        }
+    }
     private void UnlockFreeSpin()
     {
         _freeSpin = true;
