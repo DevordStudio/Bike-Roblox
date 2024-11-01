@@ -476,7 +476,6 @@ public class bicycle_code : MonoBehaviour
                 tmp_cs14.z = 0.0f + tmpMassShift;
                 CoM.localPosition = tmp_cs14;
             }
-
             coll_frontWheel.forceAppPointDistance = 0.25f;//for better sliding when rear brake is on
 
             stiffPowerGain = stiffPowerGain += 0.025f - (bikeSpeed / 10000);
@@ -559,24 +558,24 @@ public class bicycle_code : MonoBehaviour
         /////////////////////////////////////////////////// PILOT'S MASS //////////////////////////////////////////////////////////
         // it's part about moving of pilot's center of mass. It can be used for wheelie or stoppie control and for motocross section in future
         //not polished yet. For mobile version it should back pilot's mass smooth not in one tick
-        if (outsideControls.VerticalMassShift > 0)
-        {
-            tmpMassShift = outsideControls.VerticalMassShift / 12.5f;//12.5f to get 0.08fm at final
-            var tmp_cs19 = CoM.localPosition;
-            tmp_cs19.z = tmpMassShift;
-            CoM.localPosition = tmp_cs19;
+        //if (outsideControls.VerticalMassShift > 0)
+        //{
+        //    tmpMassShift = outsideControls.VerticalMassShift / 12.5f;//12.5f to get 0.08fm at final
+        //    var tmp_cs19 = CoM.localPosition;
+        //    tmp_cs19.z = tmpMassShift;
+        //    CoM.localPosition = tmp_cs19;
 
-            GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
-        }
-        if (outsideControls.VerticalMassShift < 0)
-        {
-            tmpMassShift = outsideControls.VerticalMassShift / 12.5f;//12.5f to get 0.08fm at final
-            var tmp_cs20 = CoM.localPosition;
-            tmp_cs20.z = tmpMassShift;
-            CoM.localPosition = tmp_cs20;
+        //    GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
+        //}
+        //if (outsideControls.VerticalMassShift < 0)
+        //{
+        //    tmpMassShift = outsideControls.VerticalMassShift / 12.5f;//12.5f to get 0.08fm at final
+        //    var tmp_cs20 = CoM.localPosition;
+        //    tmp_cs20.z = tmpMassShift;
+        //    CoM.localPosition = tmp_cs20;
 
-            GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
-        }
+        //    GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
+        //}
         //if (outsideControls.HorizontalMassShift < 0)
         //{
         //    var tmp_cs21 = CoM.localPosition;

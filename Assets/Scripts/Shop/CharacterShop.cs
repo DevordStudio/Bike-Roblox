@@ -20,13 +20,17 @@ public class CharacterShop : MonoBehaviour
     [SerializeField] private AudioClip _switchClip;
     [SerializeField] private AudioSource _effectSource;
     [SerializeField] private TMP_Text _priceText;
+    [SerializeField] private Image _coinIcon;
+    [SerializeField] private Sprite _yanSprite;
 
+    private Sprite _coinSprite;
     private List<GameObject> _models = new List<GameObject>();
     private int _currentIndex;
 
     private void Start()
     {
         _characterController ??= FindAnyObjectByType<CharacterController>();
+        _coinSprite = _coinIcon.sprite;
         GenerateModels();
         Button buy = _buttonBuy.GetComponent<Button>();
         Button equip = _buttonEquip.GetComponent<Button>();
@@ -113,14 +117,21 @@ public class CharacterShop : MonoBehaviour
             _buttonBuy.SetActive(true);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
+            _priceText.gameObject.SetActive(true);
+            _priceText.text = character.Info.Price.ToString();
             if (_priceText && !character.Info.IsDonate)
             {
-                _priceText.gameObject.SetActive(true);
-                _priceText.text = character.Info.Price.ToString();
+                _coinIcon.sprite = _coinSprite;
+                _nameText.color = Color.white;
                 if (_bank.GetMoney() >= character.Info.Price) _priceText.color = Color.white;
                 else _priceText.color = Color.red;
             }
-            else _priceText.gameObject.SetActive(false);
+            else if (character.Info.IsDonate)
+            {
+                _coinIcon.color = Color.yellow;
+                _coinIcon.sprite = _yanSprite;
+                _nameText.color = Color.yellow;
+            }
         }
         else if (character.Info.IsBought && !character.Info.IsEquiped)//Если куплен и не выбран
         {

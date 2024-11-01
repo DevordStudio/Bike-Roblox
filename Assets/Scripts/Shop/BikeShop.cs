@@ -22,13 +22,17 @@ public class BikeShop : MonoBehaviour
     [SerializeField] private AudioClip _switchClip;
     [SerializeField] private AudioSource _effectSource;
     [SerializeField] private TMP_Text _priceText;
+    [SerializeField] private Sprite _yanIcon;
+    [SerializeField] private Image _coinIcon;
 
     private int _currentIndex;
+    private Sprite _coinSprite;
 
     private void Start()
     {
         _bikeController ??= FindAnyObjectByType<BikeController>();
         YandexGame.SwitchLangEvent += UpdateText;
+        _coinSprite = _coinIcon.sprite;
         InitButtons();
         UpdateVisual();
     }
@@ -98,7 +102,7 @@ public class BikeShop : MonoBehaviour
     {
         BikeData currentBike = _bikeController.Bikes[_currentIndex];
         currentBike.ChangeMaterials(_chasicsMR, _frontWheelMR, _backWheelMR);
-        
+
         //_bikeName.text = currentBike.Name;
         UpdateText(YandexGame.lang);
         if (!currentBike.IsBought)//Если велосипед не куплен
@@ -106,14 +110,20 @@ public class BikeShop : MonoBehaviour
             _buttonBuy.SetActive(true);
             _buttonEquip.SetActive(false);
             _buttonEquiped.SetActive(false);
+            _priceText.text = currentBike.Price.ToString();
+            _priceText.gameObject.SetActive(true);
             if (_priceText && !currentBike.IsDonate)
             {
-                _priceText.gameObject.SetActive(true);
-                _priceText.text = currentBike.Price.ToString();
+                _coinIcon.sprite = _coinSprite;
+                _bikeName.color = Color.white;
                 if (_bank.GetMoney() >= currentBike.Price) _priceText.color = Color.white;
                 else _priceText.color = Color.red;
             }
-            else _priceText.gameObject.SetActive(false);
+            else if (currentBike.IsDonate)
+            {
+                _coinIcon.sprite = _yanIcon;
+                _bikeName.color = Color.yellow;
+            }
         }
         else if (currentBike.IsBought && !currentBike.IsEquiped)//Если куплен, но не выбран
         {
