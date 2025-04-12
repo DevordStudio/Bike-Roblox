@@ -42,7 +42,7 @@ public class SpeedBoost : MonoBehaviour
     private void GetBoost(int id)
     {
         if (id != 2) return;
-        if (!_is2X && !_bikeCode.IsBoosted)
+        if (!_is2X)
         {
             _bikeCode.LegsPower *= _speedBoostCoff;
             _bikeCode.IsBoosted = true;

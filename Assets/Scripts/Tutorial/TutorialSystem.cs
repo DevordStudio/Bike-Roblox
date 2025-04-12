@@ -18,6 +18,7 @@ public class TutorialSystem : MonoBehaviour
     [SerializeField] private Button _skipTutor;
     [SerializeField] private InputBlocker _input;
     [SerializeField] private Camera _cameraMain;
+    [SerializeField] private GameObject _timerBeforeADs;
 
     private int _currentStep;
     private void Start()
@@ -30,6 +31,7 @@ public class TutorialSystem : MonoBehaviour
             PlayThisPart();
             _cameraMain.gameObject.SetActive(false);
             _cam.SetActive(true);
+            _timerBeforeADs.SetActive(false);
         }
         else
         {
@@ -138,6 +140,7 @@ public class TutorialSystem : MonoBehaviour
         _cameraMain.gameObject.SetActive(true);
         _input.ToogleControl(true);
         _skipTutor.gameObject.SetActive(false);
+        _timerBeforeADs.gameObject.SetActive(true);
         YandexGame.savesData.TutorShown = true;
     }
     private void ActivateMapButton()

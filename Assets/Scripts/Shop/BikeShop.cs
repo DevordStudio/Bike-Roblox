@@ -22,24 +22,35 @@ public class BikeShop : MonoBehaviour
     [SerializeField] private AudioClip _switchClip;
     [SerializeField] private AudioSource _effectSource;
     [SerializeField] private TMP_Text _priceText;
-    [SerializeField] private Sprite _yanIcon;
     [SerializeField] private Image _coinIcon;
 
     private int _currentIndex;
-    private Sprite _coinSprite;
 
     private void Start()
     {
         _bikeController ??= FindAnyObjectByType<BikeController>();
         YandexGame.SwitchLangEvent += UpdateText;
-        _coinSprite = _coinIcon.sprite;
+        YandexGame.PurchaseSuccessEvent += Purchase;
         InitButtons();
         UpdateVisual();
     }
     private void OnDisable()
     {
         YandexGame.SwitchLangEvent -= UpdateText;
+        YandexGame.PurchaseSuccessEvent -= Purchase;
     }
+
+    public void Purchase(string ID)
+    {
+        foreach (var item in _bikeController.Bikes)
+        {
+            if (item.Id.ToString() == ID)
+                item.Buy();
+        }
+
+        UpdateVisual();
+    }
+
     private void PlaySwitchSound()
     {
         _particleSwitch.Play();
@@ -112,16 +123,20 @@ public class BikeShop : MonoBehaviour
             _buttonEquiped.SetActive(false);
             _priceText.text = currentBike.Price.ToString();
             _priceText.gameObject.SetActive(true);
-            if (_priceText && !currentBike.IsDonate)
+
+            var purchase = YandexGame.PurchaseByID(currentBike.Id.ToString());
+
+            if (purchase == null)
             {
-                _coinIcon.sprite = _coinSprite;
                 _bikeName.color = Color.white;
+                _coinIcon.gameObject.SetActive(true);
                 if (_bank.GetMoney() >= currentBike.Price) _priceText.color = Color.white;
                 else _priceText.color = Color.red;
             }
-            else if (currentBike.IsDonate)
+            else
             {
-                _coinIcon.sprite = _yanIcon;
+                _coinIcon.gameObject.SetActive(false);
+                _priceText.text = purchase.price.ToString();
                 _bikeName.color = Color.yellow;
             }
         }

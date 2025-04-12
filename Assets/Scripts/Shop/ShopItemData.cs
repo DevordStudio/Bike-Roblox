@@ -31,22 +31,6 @@ public class ShopItemData : ScriptableObject
 
     public static event Action OnItemBought;
     public static event Action OnItemEquiped;
-    private void OnEnable()
-    {
-        if (IsDonate)
-            YandexGame.PurchaseSuccessEvent += Purchase;
-    }
-    private void OnDisable()
-    {
-        if (IsDonate)
-            YandexGame.PurchaseSuccessEvent -= Purchase;
-    }
-
-    private void Purchase(string Id)
-    {
-        if (Id == this.Id.ToString())
-            Buy();
-    }
 
     public virtual void Buy()
     {

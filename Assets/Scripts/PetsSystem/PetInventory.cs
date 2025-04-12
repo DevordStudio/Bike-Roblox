@@ -7,24 +7,22 @@ using YG;
 public class PetInventory : MonoBehaviour
 {
     [SerializeField] private List<PetInInventory> petInventory = new List<PetInInventory>();
-    private List<PetsData> allPetsData; // Список всех доступных PetsData
+    [SerializeField] private List<PetsData> allPetsData; // Список всех доступных PetsData
 
     public int MaxPetsInInventory; // Максимальное число питомцев в инвентаре
     public int MaxEquippedPets; // Максимальное число экипированных питомцев
 
     public event Action OnInventoryChanged;
+    public static Action OnInventoryLoaded;
     public event Action<PetInInventory> OnPetAdded;
     public event Action<PetInInventory, bool> OnPetEquipChanged;
-    private void Awake()
-    {
-        allPetsData = new List<PetsData>(Resources.LoadAll<PetsData>("ShopItems/Pets"));
-        LoadPetInventory();
-    }
+
     void Start()
     {
         // Инициализируем allPetsData, например, загрузкой всех PetsData из ресурсов
         PetsData.OnPetDropped += AddPetToInventory;
         print(allPetsData.Count);
+        LoadPetInventory();
         //LoadPetInventory();
     }
     private void OnDisable() => PetsData.OnPetDropped -= AddPetToInventory;
@@ -164,6 +162,8 @@ public class PetInventory : MonoBehaviour
             PetInInventory.nextId = 1;
             Debug.Log("nextId не найден");
         }
+
+        OnInventoryLoaded?.Invoke();
     }
     public List<PetInInventory> GetPets() => petInventory;
     public int GetPetsCount() => petInventory.Count;

@@ -1,6 +1,4 @@
-﻿
-using DG.Tweening.Plugins.Options;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace YG
 {

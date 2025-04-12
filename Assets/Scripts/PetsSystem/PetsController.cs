@@ -9,7 +9,12 @@ public class PetsController : MonoBehaviour
 
     private List<GameObject> _petGO = new List<GameObject>();
 
-    private void Start()
+    private void Awake()
+    {
+        PetInventory.OnInventoryLoaded += Init;
+    }
+
+    private void Init()
     {
         _invent.OnPetEquipChanged += Controll;
         foreach (var pet in _invent.GetPets())
@@ -18,8 +23,9 @@ public class PetsController : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
+        PetInventory.OnInventoryLoaded -= Init;
         _invent.OnPetEquipChanged -= Controll;
     }
 

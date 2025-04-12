@@ -69,7 +69,8 @@ public class bicycle_code : MonoBehaviour
     /////////////////////////////////////////// technical variables ///////////////////////////////////////////////////////
     public float frontBrakePower; //brake power absract - 100 is good brakes																		
 
-    public float LegsPower; // Leg's power to wheels. Abstract it's not HP or KW or so...																	
+    public float LegsPower; // Leg's power to wheels. Abstract it's not HP or KW or so...
+    public float LegsPowerSave;																	
 
     // airRes is for wind resistance to large bikes more than small ones
     public float airRes; //Air resistant 																										// 1 is neutral
@@ -178,7 +179,9 @@ public class bicycle_code : MonoBehaviour
     //    GUI.Box(new Rect(10, 220, 320, 20), "Esc - return to main menu", smallerText);
     //    GUI.color = Color.black;
 
-
+    private void Awake()
+    {
+    }
     //}
     void Start()
     {
@@ -216,6 +219,7 @@ public class bicycle_code : MonoBehaviour
 
         // too keep LegsPower variable like "real" horse powers
         LegsPower = LegsPower * 20;
+        LegsPowerSave = LegsPower;
 
         //*30 is for good braking to keep frontBrakePower = 100 for good brakes. So, 100 is like sportsbike's Brembo
         frontBrakePower = frontBrakePower * 30;//30 is abstract but necessary for Unity5
@@ -317,9 +321,6 @@ public class bicycle_code : MonoBehaviour
             coll_frontWheel.brakeTorque = 0;//we need that to fix strange unity bug when bike stucks if you press "accelerate" just after "brake".
             coll_rearWheel.motorTorque = LegsPower * outsideControls.Vertical;
 
-            // debug - rear wheel is green when accelerate
-            meshRearWheel.GetComponent<Renderer>().material.color = Color.green;
-
             // when normal accelerating CoM z is averaged
             var tmp_cs5 = CoM.localPosition;
             tmp_cs5.z = 0.0f + tmpMassShift;
@@ -331,9 +332,6 @@ public class bicycle_code : MonoBehaviour
         if (!crashed && outsideControls.Vertical > 0 && isReverseOn)
         {
             coll_rearWheel.motorTorque = LegsPower * -outsideControls.Vertical / 2 + (bikeSpeed * 50);//need to make reverse really slow
-
-            // debug - rear wheel is green when accelerate
-            meshRearWheel.GetComponent<Renderer>().material.color = Color.green;
 
             // when normal accelerating CoM z is averaged
             var tmp_cs6 = CoM.localPosition;
@@ -348,7 +346,6 @@ public class bicycle_code : MonoBehaviour
         {
             coll_frontWheel.brakeTorque = 0;//we need that to fix strange unity bug when bike stucks if you press "accelerate" just after "brake".
             coll_rearWheel.motorTorque = LegsPower * 1.2f;//1.2f mean it's full throttle
-            meshRearWheel.GetComponent<Renderer>().material.color = Color.green;
             GetComponent<Rigidbody>().angularDrag = 20;//for wheelie stability
 
             CoM.localPosition = new Vector3(CoM.localPosition.z, CoM.localPosition.y, -(1.38f - baseDistance / 1.4f) + tmpMassShift);
@@ -455,8 +452,6 @@ public class bicycle_code : MonoBehaviour
 
 
             GetComponent<Rigidbody>().centerOfMass = new Vector3(CoM.localPosition.x, CoM.localPosition.y, CoM.localPosition.z);
-            // debug - wheel is red when braking
-            meshFrontWheel.GetComponent<Renderer>().material.color = Color.red;
 
             //we need to mark suspension as very compressed to make it weaker
             forgeBlocked = true;
@@ -500,10 +495,6 @@ public class bicycle_code : MonoBehaviour
             var tmp_cs15z = coll_rearWheel.sidewaysFriction;
             tmp_cs15z.stiffness = 0.9f - stiffPowerGain;// (2 - for stability, 0.01f - falls in a moment)
             coll_rearWheel.sidewaysFriction = tmp_cs15z;
-
-
-            meshRearWheel.GetComponent<Renderer>().material.color = Color.red;
-
         }
         else
         {

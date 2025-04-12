@@ -8,7 +8,7 @@ using TMPro;
 namespace YG
 {
     [HelpURL("https://www.notion.so/PluginYG-d457b23eee604b7aa6076116aab647ed#7f075606f6c24091926fa3ad7ab59d10")]
-    public class LBPlayerDataYG : MonoBehaviour
+    public class LBPlayerDataYG : MonoBehaviour//
     {
         public ImageLoadYG imageLoad;
         public MonoBehaviour[] topPlayerActivityComponents = new MonoBehaviour[0];

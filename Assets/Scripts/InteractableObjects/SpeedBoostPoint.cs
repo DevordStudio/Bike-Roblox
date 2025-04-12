@@ -22,11 +22,29 @@ public class SpeedBoostPoint : MonoBehaviour
     {
         Reload();
         _sound = FindAnyObjectByType<SoundController>();
+
+        SpeedBoost.OnConditionChanged += Check;
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out bicycle_code player))
             Boost(player);
+    }
+
+    private void OnDestroy()
+    {
+        SpeedBoost.OnConditionChanged -= Check;
+    }
+
+    private void Check(bool isActive)
+    {
+        if (isActive)
+        {
+            StopAllCoroutines();
+            _isCanBoost = false;
+        }
+        else
+            _isCanBoost = true;
     }
 
     private void Boost(bicycle_code player)

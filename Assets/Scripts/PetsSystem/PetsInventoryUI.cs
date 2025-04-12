@@ -1,6 +1,4 @@
-using NaughtyAttributes;
 using System.Collections.Generic;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,12 +21,18 @@ public class PetsInventoryUI : MonoBehaviour
     [SerializeField] private PetCell _currentCell;
     private List<PetCell> _cells = new List<PetCell>();
 
-    private void Start()
+    private void Awake()
+    {
+        PetInventory.OnInventoryLoaded += Init;
+    }
+
+    private void Init()
     {
         PetCell.OnCellSelected += UpdateUI;
         _invent.OnPetAdded += GenerateCell;
         _invent.OnInventoryChanged += UpdateCountText;
         YandexGame.SwitchLangEvent += SwitchLanduage;
+        Debug.Log("Размер petInvent - " + _invent.GetPets().Count);
         foreach (var pet in _invent.GetPets())
             GenerateCell(pet);
         CheckCurrentCell();
@@ -37,12 +41,15 @@ public class PetsInventoryUI : MonoBehaviour
         SwitchLanduage(YandexGame.lang);
         UpdateCountText();
     }
+
     private void OnDestroy()
     {
         PetCell.OnCellSelected -= UpdateUI;
         _invent.OnInventoryChanged -= UpdateCountText;
+        PetInventory.OnInventoryLoaded -= Init;
         _invent.OnPetAdded -= GenerateCell;
     }
+
     private void SwitchLanduage(string lang)
     {
         if (!_currentCell) return;
